@@ -1,11 +1,4 @@
-import sys
-a,b=map(int,sys.stdin.readline().split())
-c=list(map(int,sys.stdin.readline().split()))
-real=[c[0]]
-for i in range(len(c)):
-    if c[i-1]==c[i]:
-        continue
-    else:
-        real.append(c[i])
-del real[0]
-print(real)
+import numpy as np
+arr1=np.arange(10)
+arr2=arr1>5
+print(arr1[arr2])
