@@ -1,7 +1,7 @@
-a=input()
-cnt=0
-for i in range(len(a)):
-    cnt+=int(a[i])
-    if int(a[i])==0:
-        cnt+=int(a[i-1])*9
-print(cnt)    
+num=[list(map(int,input().split())) for i in range(int(input()))]
+num.append([num[0][0],num[0][1]])
+x,y=0,0
+for i in range(len(num)-1):
+    x+=num[i][0]*num[i+1][1]
+    y+=num[i][1]*num[i+1][0]
+print(round(abs(x-y)/2,2))
