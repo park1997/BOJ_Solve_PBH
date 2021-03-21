@@ -2,7 +2,7 @@ def game(idx, nations_score, probability):
     # 모든 매치가 끝났을 경우
     if idx == 6:
         sorted_score = sorted(list(nations_score.items()), key=lambda x: x[1], reverse=True)
-
+        print(sorted_score)
         # 동점 4명
         if sorted_score[0][1] == sorted_score[1][1] == sorted_score[2][1] == sorted_score[3][1]:
             for i in range(4):
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     for _ in range(6):
         temp = list(input().split())
         data.append(temp)
-    print(nations_score)
+    print(data)
     game(0, nations_score, 1)
     # print(nations_score)
     for key in nations:
