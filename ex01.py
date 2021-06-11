@@ -1,9 +1,6 @@
-a= 1
-while 1:
-    if a*(a+1)/2 >=3000:
-        result = a*(a+1)//2
-        loc = a
-        break
-    a+=1
-print("1~1000의 합에서 최초로 3000이 넘는 위치 :",loc)
-print("숫자의 합은 :",result)
+inStr = "파이썬 기말고사 주의사항 : 답안지 스캔 주의, 촬영 주의. 기말고사 시간 엄수. 파이썬 교재및 강의자료 답안작성 활용 가능"
+
+file_in = open("notice.txt",mode = 'rwt',encoding='utf-8')
+inStr = file_in.readlines()
+
+print(inStr)
