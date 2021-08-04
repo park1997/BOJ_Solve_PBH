@@ -1,4 +1,3 @@
-map = [[j for j in input()] for i in range(int(input()))]
+map = int(input())
 print(map)
-
 
