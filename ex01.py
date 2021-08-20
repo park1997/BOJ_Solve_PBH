@@ -1,14 +1,23 @@
-a,b=map(str,input().split())
-result=''
-if len(a)==len(b):
-    for i in range(len(a)):
-        result+=str((int(a[i])+int(b[i])))
-elif len(a) < len(b):
-    result+=b[0:len(b)-len(a)]
-    for i in range(len(a)):
-        result+=str(int(a[i])+int(b[i+(len(b)-len(a))]))
-elif len(a) > len(b):
-    result+=a[0:len(a)-len(b)]
-    for i in range(len(b)):
-        result+=str(int(b[i])+int(a[i+(len(a)-len(b))]))
-print(result)
+def bi(a):
+    n=0
+    result=''
+    while 1:
+        b=2**n
+        if a-b<0:
+            n-=1
+            break
+        n+=1
+    for i in range(n,-1,-1):
+        b=2**i
+        if a-b >=0:
+            result+='1'
+            a-=b
+        else:
+            result+='0'
+    return result
+n=bi(int(input()))[::-1]
+ans = 0
+for i,j in enumerate(n):
+    if j=='1':
+        ans+=2**(len(n)-int(i)-1)
+print(ans)
