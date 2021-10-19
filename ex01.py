@@ -1,15 +1,13 @@
-T = int(input())
-for i in range(T):
-    n = int(input())
-    sticker = [list(map(int,input().split())) for j in range(2)]
-    if n==1:
-        print(max(sticker[0][0],sticker[1][0]))
-        continue
-    for k in range(1,n):
-        if k == 1:
-            sticker[0][1] += sticker[1][0]
-            sticker[1][1] += sticker[0][0]
-        else:
-            sticker[0][k] += max(sticker[1][k-1],sticker[1][k-2])
-            sticker[1][k] += max(sticker[0][k-1],sticker[0][k-2])
-    print(max(sticker[0][-1],sticker[1][-1]))
+n = int(input())
+data = list(map(int,input().split()))
+dp =[0]*n
+dp[0] = 1
+for i in range(1,n):
+    max_ = 0
+    for j in range(i):
+        if data[i] > data[j]:
+            if max_<dp[j]:
+                max_ = dp[j]
+        dp[i] = max_ +1
+print(max(dp))
+
