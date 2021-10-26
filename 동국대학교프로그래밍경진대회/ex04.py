@@ -11,7 +11,7 @@ def main():
         p = w_p[i-1][1]
         for j in range(1,k+1):
             if j>=w:
-                dp[i][j]=max(dp[i-1][j],dp[i-1][j-w]+p)
+                dp[i][j]=max(dp[i-1][j],dp[i-1][j-w]+p,dp[i][j-w])
             else:
                 dp[i][j]=dp[i-1][j]
     print(dp[-1][-1])
