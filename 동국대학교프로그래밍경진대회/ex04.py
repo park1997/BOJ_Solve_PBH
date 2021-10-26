@@ -15,7 +15,7 @@ def main():
             else:
                 dp[i][j]=dp[i-1][j]
     print(dp[-1][-1])
-    print(dp)
+    
 if __name__=="__main__": 
     main()
     
