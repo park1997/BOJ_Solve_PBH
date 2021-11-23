@@ -1,13 +1,12 @@
-n = int(input())
-data = list(map(int,input().split()))
-dp =[0]*n
-dp[0] = 1
-for i in range(1,n):
-    max_ = 0
-    for j in range(i):
-        if data[i] > data[j]:
-            if max_<dp[j]:
-                max_ = dp[j]
-        dp[i] = max_ +1
-print(max(dp))
-
+N = int(input())
+data = [list(map(int,input().split())) for i in range(N)]
+data.sort(key=lambda x: (x[1],x[0]))
+result = 1
+s = data[0][0]
+e = data[0][1]
+for i in range(1,len(data)):
+    if data[i][0]>=e:
+        s = data[i][0]
+        e = data[i][1]
+        result+=1
+print(result)
