@@ -10,10 +10,12 @@ def dfs(x,y):
         return False
     if graph[x][y]==0:
         graph[x][y]=1
+        print(x,y)
         dfs(x-1,y)
         dfs(x,y-1)
         dfs(x+1,y)
         dfs(x,y+1)
+
         return True
     return False
 
