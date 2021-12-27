@@ -1,3 +1,4 @@
+# 시간초과
 import sys
 N,K = map(int,sys.stdin.readline().split())
 graph = [list(map(int,sys.stdin.readline().split())) for i in range(N)]
