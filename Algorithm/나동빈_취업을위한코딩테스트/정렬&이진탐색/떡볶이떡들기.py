@@ -14,7 +14,7 @@ def slice(rc,mid):
     return result
 while start <= end:
     mid = (start+end)//2
-    if slice(rc,mid) > M:
+    if slice(rc,mid) >= M:
         start = mid +1
     elif slice(rc,mid) < M:
         end = mid -1
