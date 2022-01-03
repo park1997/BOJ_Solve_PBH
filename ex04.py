@@ -1,31 +1,37 @@
-width, height = 10, 10
-row, col, color = 5, 5, 1
-map_ = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-        [0, 0, 0, 0, 1, 1, 0, 1, 0, 0],
-        [0, 0, 1, 1, 0, 0, 0, 0, 1, 0],
-        [0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
-        [0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
-        [0, 1, 0, 0, 0, 0, 0, 1, 0, 0],
-        [0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
-        [0, 0, 0, 1, 0, 1, 1, 0, 0, 0],
-        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0]]
-queue = []
+from collections import deque
+import sys
+N,M,V = map(int,sys.stdin.readline().split())
+graph = [[] for _ in range(N+1)]
+for i in range(M):
+    a,b = map(int,sys.stdin.readline().split())
+    graph[a].append(b)
+    graph[b].append(a)
+for j in range(1,N+1):
+    graph[j].sort()
+
+def bfs(start):
+    # global visited
+    q = deque([start])
+    while q:
+        s = q.popleft()
+        print(s,end=" ")
+        visited[s] = True
+        for i in graph[s]:
+            if not visited[i]:
+                q.append(i)
+                visited[i] = True
 
 
-def bfs(coord, color):
-    global map_, queue
-    queue.append(coord)
-    map_[coord[0]][coord[1]] = color
-    while len(queue) != 0:
-        front = queue.pop(0)
-        for (drow, dcol) in ((1, 0), (0, 1), (-1, 0), (0, -1)):
-            if (0 <= front[0]+drow < height and 0 <= front[1]+dcol < width) and map_[front[0]+drow][front[1]+dcol] == 0:
-                queue.append((front[0]+drow, front[1]+dcol))
-                map_[front[0]+drow][front[1]+dcol] = color
+def dfs(start):
+    # global visited
+    visited[start] = True
+    print(start,end = " ")
+    for i in graph[start]:
+        if not visited[i]:
+            dfs(i)
 
-bfs((row, col), color)
-for i in range(height):
-    for j in range(width):
-        print(map_[i][j], end='')
-    print('')
+visited = [False]*(N+1)
+dfs(V)
+print()
+visited = [False]*(N+1)
+bfs(V)
