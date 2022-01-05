@@ -1,13 +1,33 @@
+from collections import deque
+
 N = int(input())
-dp1 = 1
-dp2 = 1
-dp3 = 1
-if N==1:
-    print(3)
-else:
-    for i in range(1,N):
-        temp1 = dp1+dp2+dp3 
-        temp2 = dp1+dp3
-        temp3 = dp1+dp2
-        dp1,dp2,dp3=temp1,temp2,temp3
-    print((dp1+dp2+dp3)%9901)
+graph = [list(map(int,input())) for i in range(N)]
+dx = [1,0,-1,0]
+dy = [0,1,0,-1]
+visited = [[False]*N for _ in range(N)]
+q = deque()
+result = []
+for i in range(N):
+    for j in range(N):
+        cnt = 1
+        # print(i,j)
+        if graph[i][j]==1 and not visited[i][j]:
+            q.append([i,j])
+            visited[i][j] = True
+            while q:
+                # print(q)
+                x,y = q.popleft()
+                for d in range(4):
+                    nx = x + dx[d]
+                    ny = y + dy[d]
+                    if nx>=0 and ny>=0 and ny<N and nx<N and graph[nx][ny]==1 and not visited[nx][ny]:
+                        graph[nx][ny]=0
+                        q.append([nx,ny])
+                        cnt+=1
+            result.append(cnt)
+# print()
+print(len(result))
+result.sort()
+for i in result:
+    print(i)
+
