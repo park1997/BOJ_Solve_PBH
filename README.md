@@ -6,14 +6,13 @@
 알고리즘을 학습하면서 앞으로 있을 코딩 테스트나 여러가지 개발에 도움이 되기위해 코딩을 연습하였습니다.
 
 ## BOJ Profile
-![스크린샷 2022-01-07 오후 4 56 17](https://user-images.githubusercontent.com/73048180/148511055-6c6d05a7-4e34-4e25-b70b-c3b92b9fd725.png)
+https://www.acmicpc.net/user/iambyunghyun
 
 
 **(2022-01-07) 기준 문제 해결 상태**
+![스크린샷 2022-01-07 오후 4 57 34](https://user-images.githubusercontent.com/73048180/148511217-1a3bc35c-fa7e-4c0d-8bc8-b9b3358012ab.png)
 
-![스크린샷 2021-11-09 오후 2 19 40](https://user-images.githubusercontent.com/73048180/140867053-7d53ca02-1a63-4a3f-a0f4-267de3095a6b.png)
 
 ## Solve.ac
-
-![스크린샷 2021-11-09 오후 2 21 15](https://user-images.githubusercontent.com/73048180/140867169-69a8deda-2a51-4758-88e9-e2bc3742d603.png)
-![스크린샷 2021-11-09 오후 2 20 35](https://user-images.githubusercontent.com/73048180/140867113-137ae68f-d6ac-410c-80d6-1edf5a1496d0.png)
+![스크린샷 2022-01-07 오후 5 00 07](https://user-images.githubusercontent.com/73048180/148511498-e10b9628-9bd3-4335-b137-20c0d464a452.png)
+![스크린샷 2022-01-07 오후 5 00 44](https://user-images.githubusercontent.com/73048180/148511571-a677e13c-0879-4fba-93c4-90c52b73fbfd.png)
