@@ -6,10 +6,10 @@
 알고리즘을 학습하면서 앞으로 있을 코딩 테스트나 여러가지 개발에 도움이 되기위해 코딩을 연습하였습니다.
 
 ## BOJ Profile
-https://www.acmicpc.net/user/iambyunghyun
+![스크린샷 2022-01-07 오후 4 56 17](https://user-images.githubusercontent.com/73048180/148511055-6c6d05a7-4e34-4e25-b70b-c3b92b9fd725.png)
 
 
-**(2021-11-9) 기준 문제 해결 상태**
+**(2022-01-07) 기준 문제 해결 상태**
 
 ![스크린샷 2021-11-09 오후 2 19 40](https://user-images.githubusercontent.com/73048180/140867053-7d53ca02-1a63-4a3f-a0f4-267de3095a6b.png)
 
