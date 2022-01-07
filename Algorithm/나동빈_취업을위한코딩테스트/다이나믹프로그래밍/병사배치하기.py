@@ -11,5 +11,3 @@ for i in range(1,len(s)):
         if s[i]>s[j]:
             dp[i] = max(dp[i],dp[j]+1)
 print(N-max(dp))
-
-
