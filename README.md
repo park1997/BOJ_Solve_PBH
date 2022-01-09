@@ -6,6 +6,8 @@
 위 Repository는 알고리즘 학습을 했던 기록들이 저장되어 있습니다.
 
 ## BOJ Profile
+[![Solved.ac Profile](http://mazassumnida.wtf/api/v2/generate_badge?boj=iambyunghyun)](https://solved.ac/iambyunghyun/)
+
 https://www.acmicpc.net/user/iambyunghyun
 
 
