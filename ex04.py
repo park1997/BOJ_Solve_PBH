@@ -1,37 +1,29 @@
 from collections import deque
 import sys
-N,M,V = map(int,sys.stdin.readline().split())
-graph = [[] for _ in range(N+1)]
-for i in range(M):
-    a,b = map(int,sys.stdin.readline().split())
-    graph[a].append(b)
-    graph[b].append(a)
-for j in range(1,N+1):
-    graph[j].sort()
 
-def bfs(start):
-    # global visited
-    q = deque([start])
-    while q:
-        s = q.popleft()
-        print(s,end=" ")
-        visited[s] = True
-        for i in graph[s]:
-            if not visited[i]:
-                q.append(i)
-                visited[i] = True
+V,E = map(int,input().split())
+K = int(input())
+graph = [list(map(int,input().split())) for _ in range(E)]
+graph = []
+start = []
+for _ in range(E):
+    a = list(map(int,input().split()))
+    graph.append(a)
+    if a[0]==K:
+        start.append(a)
+print(graph)
 
+INF = int(1e9)
+node = [INF]*(V+1)
+visited = [False]*(V+1)
+node[K] = 0
+visited[K] = True
 
-def dfs(start):
-    # global visited
-    visited[start] = True
-    print(start,end = " ")
-    for i in graph[start]:
-        if not visited[i]:
-            dfs(i)
-
-visited = [False]*(N+1)
-dfs(V)
-print()
-visited = [False]*(N+1)
-bfs(V)
+q = deque(start)
+while q:
+    u,v,w = q.popleft()
+    visited[u] = True
+    for g in graph:
+        if g[0] == u and not visited[v]:
+            node = min(node[v],node[u]+w)
+        
