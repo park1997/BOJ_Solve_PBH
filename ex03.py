@@ -1,45 +1,60 @@
-import sys
 from collections import deque
-def bfs(x,y):
-    global graph,N,M
-    t_graph = [g[:] for g in graph]
-    visited = [[False]*M for _ in range(N)]
-    dx = [0,1,0,-1]
-    dy = [1,0,-1,0]
-    q = deque()
-    q.append([x,y])
-    visited[x][y] = True
-    while q:
-        a,b = q.popleft()
-        for i in range(4):
-            nx = a + dx[i]
-            ny = b + dy[i]
-            if nx>=0 and ny>=0 and nx<N and ny<M:
-                if t_graph[nx][ny] == 0 and not visited[nx][ny]:
-                    t_graph[nx][ny] = t_graph[a][b] + 1
-                    visited[nx][ny] = True
-                    q.append([nx,ny])
-    t_max = -1
-    for t in t_graph:
-        if t_max < max(t):
-            t_max = max(t)
-    return t_max
+N = int(input())    # 보드의 크기
+K = int(input())    # 사과의 개수 
+graph = [[0]*(N+1) for _ in range(N+1)]
+for i in range(K):
+    a,b = map(int,input().split())
+    graph[a][b] = 1 # 사과의 위치
 
-N,M = map(int,sys.stdin.readline().split())
-graph = [list(map(str,sys.stdin.readline().strip())) for _ in range(N)]
+L = int(input())
+route1 = [list(map(str,input().split())) for _ in range(L)]
+route = [[0,0] for _ in range(L)]
+for i in range(len(route1)):
+    if i==0:
+        route[i][0] = int(route1[i][0])
+    else:
+        route[i][0] = int(route1[i][0])-int(route1[i-1][0])
+    route[i][1] = route1[i][1]
+route.append([int(1e9),0])
 
-for x in range(N):
-    for y in range(M):
-        if graph[x][y] == "L":
-            graph[x][y] = 0
-        elif graph[x][y] == "W":
-            graph[x][y] = -1
+direction = [[0,1],[1,0],[0,-1],[-1,0]] # 동, 남, 서 , 북
+now_direction = 0
+cnt = 0
+will_go =[0,0]
 
-result = -1
-for x in range(N):
-    for y in range(M):
-        if graph[x][y] == 0:
-            temp = bfs(x,y)
-            if result < temp:
-                result = temp
-print(result)
+snake = deque()
+head = [1,1]
+snake.append(head)
+flag = False
+
+for r in route:
+    for i in range(r[0]):
+        will_go[0] = snake[-1][0] + direction[now_direction][0] # 다음에 이동할 머리 의 x 값
+        will_go[1] = snake[-1][1] + direction[now_direction][1]
+        if will_go in snake:    # 자기 자신에게 부딛치는 경우
+            flag = True
+            cnt+=1
+            break
+        if 1<=will_go[0]<=N and 1<=will_go[1]<=N:    # 테두리를 벗어나지 않을 시
+            if graph[will_go[0]][will_go[1]] == 0:  # 먹이를 먹지 않을 시 
+                snake.popleft()
+                snake.append([will_go[0],will_go[1]])
+                cnt+=1
+            elif graph[will_go[0]][will_go[1]] == 1:    # 먹이를 먹을 시
+                snake.append([will_go[0],will_go[1]])
+                cnt+=1
+                graph[will_go[0]][will_go[1]] = 0
+        else: # 테두리를 벗어나는 경우
+            flag = True
+            cnt+=1
+            break
+        
+
+    if flag:
+        print(cnt)
+        break
+
+    if r[1]== "D":
+        now_direction = (now_direction+1)%4
+    elif r[1]== "L":
+        now_direction = (now_direction-1)%4
