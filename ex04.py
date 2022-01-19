@@ -1,33 +1,71 @@
+import sys
 from collections import deque
+def findice(ices):
+    global dx,dy,ivisited,ice
+    q = deque(ices)
+    temp_ice =[]
+    while q:
+        a,b = q.popleft()
+        ivisited[a][b] = True
+        for i in range(4):
+            nx = a + dx[i]
+            ny = b + dy[i]
+            if 0<=nx<R and 0<=ny<C:
+                if graph[nx][ny] == "X" and not ivisited[nx][ny]:
+                    temp_ice.append([nx,ny])
+                    ivisited[nx][ny] = True 
+                    graph[nx][ny] = "."
+    ice = temp_ice
 
-N = int(input())
-graph = [list(map(int,input())) for i in range(N)]
-dx = [1,0,-1,0]
-dy = [0,1,0,-1]
-visited = [[False]*N for _ in range(N)]
-q = deque()
-result = []
-for i in range(N):
-    for j in range(N):
-        cnt = 1
-        # print(i,j)
-        if graph[i][j]==1 and not visited[i][j]:
-            q.append([i,j])
-            visited[i][j] = True
-            while q:
-                # print(q)
-                x,y = q.popleft()
-                for d in range(4):
-                    nx = x + dx[d]
-                    ny = y + dy[d]
-                    if nx>=0 and ny>=0 and ny<N and nx<N and graph[nx][ny]==1 and not visited[nx][ny]:
-                        graph[nx][ny]=0
-                        q.append([nx,ny])
-                        cnt+=1
-            result.append(cnt)
-# print()
-print(len(result))
-result.sort()
-for i in result:
-    print(i)
+def findL(Ls):
+    global dx,dy,Lvisited,L
+    q = deque(Ls)
+    temp_Ls = []
+    while q:
+        a,b = q.popleft()
+        Lvisited[a][b] = True
+        for i in range(4):
+            nx = a + dx[i]
+            ny = b + dy[i]
+            if 0<=nx<R and 0<=ny<C and not Lvisited[nx][ny]:
+                if graph[nx][ny] == ".":
+                    Lvisited[nx][ny] = True
+                    q.append([nx,ny])
+                elif graph[nx][ny] == "X":
+                    temp_Ls.append([nx,ny])
+                    Lvisited[nx][ny] = True
+                if graph[nx][ny] == "L":
+                    return True
+    L = temp_Ls
+    return False
+
+R,C = map(int,sys.stdin.readline().split())
+Lvisited = [[False]*C for _ in range(R)]
+ivisited = [[False]*C for _ in range(R)]
+graph = []
+L = []
+ice = []
+for i in range(R):
+    a = list(sys.stdin.readline().strip())
+    for j in range(len(a)):
+        if "L" == a[j]:
+            L.append([i,j])
+            ivisited[i][j] = True
+            ice.append([i,j])
+        if "." == a[j]:
+            ice.append([i,j])
+    graph.append(a)
+del L[1]
+
+dx = [0,1,0,-1]
+dy = [1,0,-1,0]
+
+cnt = 0
+while 1:
+    if findL(L):
+        print(cnt)
+        break
+    else:
+        findice(ice)
+        cnt += 1
 
