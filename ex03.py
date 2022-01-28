@@ -1,20 +1,11 @@
-N = int(input())
-num = list(map(int,input().split()))
-M = int(input())
-start = 0
-end = 0
-result = num[start]
-cnt = 0
-while start<=end:
-    try:
-        if result<=M:
-            end+=1
-            result += num[end]
-        elif result>M:
-            result-=num[start]
-            start+=1
-            cnt += N-end
-    except:
-        break
-print(cnt)
+import sys
+N = int(sys.stdin.readline())
+a = [0]*(10001)
+for i in range(N):
+    a[int(sys.stdin.readline())]+=1
 
+for i in range(len(a)):
+    if a[i]!=0:
+        for j in range(a[i]):
+            print(i)
+    
