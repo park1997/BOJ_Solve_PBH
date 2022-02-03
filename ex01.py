@@ -41,3 +41,5 @@ graph = [list(map(int,sys.stdin.readline().split())) for _ in range(N)]
 visited = [[False]*M for _ in range(N)]
 result = 0
 go(r,c,d)
+
+for 
