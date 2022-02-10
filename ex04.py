@@ -1,73 +1,79 @@
 from collections import deque
-import sys
-N = int(sys.stdin.readline())
-def bfs(start,type):
-    global graph, f_visited, w_visited
-    dx = [0,1,-1,0]
-    dy = [1,0,0,-1]
-    q = deque(start)
-    if type == "f":
-        for i in start:
-            f_visited[i[0]][i[1]] = 1
-    elif type == "w":
-        for i in start:
-            w_visited[i[0]][i[1]] = 1
+from itertools import combinations
+
+
+def bfs(start,end,t):
+    global result
+    visited = [[[0]*N for _ in range(N)] for _ in range(2)]
+    q = deque()
+    q.append([start[0],start[1],t])
+    visited[t][start[0]][start[1]] = 1
     while q:
-        a,b = q.popleft()
+        a,b,c = q.popleft()
+        print(q,a,b)
         for i in range(4):
             nx = a + dx[i]
             ny = b + dy[i]
-            if nx>=0 and ny>=0 and nx<h and ny<w :
-                if type == 'f':
-                    if graph[nx][ny] != "#" and f_visited[nx][ny] == 0:
-                        f_visited[nx][ny] = f_visited[a][b] + 1
-                        q.append([nx,ny])
-                elif type == "w":
-                    if graph[nx][ny] != "#" and w_visited[nx][ny] == 0 and ((f_visited[nx][ny] == 0) or (f_visited[nx][ny] > w_visited[a][b] + 1)):
-                        w_visited[nx][ny] = w_visited[a][b] + 1
-                        q.append([nx,ny])
+            if nx>=0 and ny>=0 and nx<N and ny<N:
+                if visited[c][nx][ny] !=0 and ord(graph[a][b])<ord(graph[nx][ny]):
+                    print(a,b,"->",nx,ny)
+                    if visited[c][nx][ny] < visited[c][a][b] + 1:
+                        visited[c][nx][ny] = visited[c][a][b] + 1
+                        q.append([nx,ny,c])
+                elif visited[c][nx][ny] == 0 and ord(graph[a][b])>=ord(graph[nx][ny]) and c == 0:
+                    q.append([nx,ny,1])
+                    visited[1][nx][ny] = visited[c][a][b] + 1
+                elif visited[c][nx][ny] == 0 and ord(graph[a][b])<ord(graph[nx][ny]):
+                    q.append([nx,ny,c])
+                    visited[c][nx][ny] = visited[c][a][b] + 1
+                if [nx,ny] == end:
+                    for v in visited:
+                        for i in v:
+                            print(i)
+                        print()
+                    return
+        for v in visited:
+            for i in v:
+                print(i)
+            print()
 
-for _ in range(N):
-    w,h = map(int,sys.stdin.readline().split())
-    graph = [list(map(str,sys.stdin.readline().strip())) for _ in range(h)]
-    f_visited = [[0]*w for _ in range(h)]
-    w_visited = [[0]*w for _ in range(h)]
-    s = []
-    fire = []
-    gate = []
-    result = []
-    for i in range(h):
-        for j in range(w):
-            if graph[i][j] == "*":
-                fire.append([i,j])
-            elif graph[i][j] == "@":
-                s.append([i,j])
-            if (i==0 or i==h-1 or j ==0 or j==w-1) and (graph[i][j]=="." or graph[i][j]=="@"):
-                gate.append([i,j])
-    # print(gate)
-    bfs(fire,"f")
-    bfs(s,"w")
-    # for f in f_visited:
-    #     print(f)
-    # print()
-    # for w in w_visited:
-    #     print(w)
-    for g in gate:
-        if w_visited[g[0]][g[1]]!=0:
-            result.append(w_visited[g[0]][g[1]])
-    if len(result)!=0:
-        print(min(result))
-    else:
-        print('IMPOSSIBLE')
+
+
+N = int(input())
+graph = [list(map(str,input().split())) for _ in range(N)]
+s_to_e = [[i,j] for i in range(N) for j in range(N)]
+
+
+combi = list(combinations(s_to_e,2))
+dx = [0,1,0,-1]
+dy = [1,0,-1,0]
+result = -1
+for c in combi:
+    start = c[0]
+    end = c[1]
+    # bfs(start,end,0)
+bfs([0,0],[4,4],0)
+print(result)
+
+
 
 
 '''
-1
-7 6
-###.###
-###.###
-#.....#
-#.....#
-#..@..#
-#######
+5
+A B C F F
+F F D E F
+F F F F F
+C B A G H
+D E F G H
+
+4
+A B C D
+G F E D
+H I J K
+O N M L
+
+3
+A B C
+E D C
+F G H
 '''
