@@ -1,34 +1,17 @@
-n = int(input())
-graph = [list(input()) for _ in range(n)]
-
-row = 0
-for i in range(n):
-    cnt = 0
-    for j in range(n):
-        if graph[i][j] == ".":
-            cnt +=1
-        else:
-            if cnt >= 2:
-                row +=1
-                cnt = 0
+import sys
+N = int(sys.stdin.readline())
+dp = [[0]*10 for _ in range(101)]
+dp[1] = [0,1,1,1,1,1,1,1,1,1]
+m = 1000000000
+if N==1:
+    print(9)
+else:
+    for i in range(2,N+1):
+        for j in range(10):
+            if j==0:
+                dp[i][j] = dp[i-1][1]
+            elif j==9:
+                dp[i][j] = dp[i-1][8]
             else:
-                cnt = 0
-    if cnt>=2:
-        row +=1
-
-col = 0
-for i in range(n):
-    cnt = 0
-    for j in range(n):
-        if graph[j][i] ==".":
-            cnt +=1
-        else:
-            if cnt >=2:
-                col +=1
-                cnt = 0
-            else:
-                cnt = 0
-    if cnt >=2:
-        col +=1
-
-print(row,col)
+                dp[i][j] = dp[i-1][j-1] + dp[i-1][j+1]
+    print(sum(dp[N])%m)
