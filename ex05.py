@@ -1,17 +1,40 @@
 import sys
-N = int(sys.stdin.readline())
-dp = [[0]*10 for _ in range(101)]
-dp[1] = [0,1,1,1,1,1,1,1,1,1]
-m = 1000000000
-if N==1:
-    print(9)
-else:
-    for i in range(2,N+1):
-        for j in range(10):
-            if j==0:
-                dp[i][j] = dp[i-1][1]
-            elif j==9:
-                dp[i][j] = dp[i-1][8]
-            else:
-                dp[i][j] = dp[i-1][j-1] + dp[i-1][j+1]
-    print(sum(dp[N])%m)
+from collections import deque
+def bfs(start):
+    q = deque([start])
+    dx = [0,0,1,-1]
+    dy = [1,-1,0,0]
+    visited[start[0]][start[1]] = 0
+    while q:
+        a,b = q.popleft()
+        for i in range(4):
+            nx = a + dx[i]
+            ny = b + dy[i]
+            while True:
+                if not (nx >=0 and ny>=0 and nx<H and ny<W):
+                    break
+                if visited[nx][ny] < visited[a][b] + 1:
+                    break
+                if graph[nx][ny] == "*":
+                    break
+                q.append([nx,ny])
+                visited[nx][ny] = visited[a][b]+1
+                nx = nx + dx[i]
+                ny = ny + dy[i]
+
+
+    return
+W,H = map(int,sys.stdin.readline().split())
+visited = [[int(1e9)]*W for _ in range(H)]
+graph = []
+c = []
+for i in range(H):
+    a = list(map(str,sys.stdin.readline().strip()))
+    for j in range(W):
+        if a[j] == "C":
+            c.append([i,j])
+    graph.append(a)
+
+bfs(c[0])
+print(visited[c[1][0]][c[1][1]]-1)
+
