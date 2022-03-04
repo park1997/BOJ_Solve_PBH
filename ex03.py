@@ -7,7 +7,6 @@ def bfs(start):
     while q:
         a,b,c = q.popleft()
         if [a,b] == [Ex-1,Ey-1]:
-            print(c,a,b)
             return visited[c][a][b]
         for i in range(4):
             nx = a + dx[i]
@@ -37,8 +36,8 @@ print(bfs([Hx-1,Hy-1,0]))
 1 1
 5 6
 0 1 1 1 0 0
-0 1 1 0 1 0
+0 1 1 0 0 0
 0 1 0 0 1 0
 0 1 0 0 1 0
-0 1 0 1 1 0
+0 1 0 0 0 0
 '''
