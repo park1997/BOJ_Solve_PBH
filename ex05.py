@@ -1,104 +1,85 @@
 import sys
-from collections import deque
-def ball_escape():
-    global ball,hole,graph
-    dx = [0,0,1,-1]
-    dy = [1,-1,0,0]
-    q = deque()
-    q.append([ball[0][0],ball[0][1],ball[1][0], ball[1][1]])
-    # 빨간 구슬이 벽에 사로 막혀 있을떄 
-    # flag1 = False
-    # for i in range(4):
-    #     nx = ball[0][0] + dx[i]
-    #     ny = ball[0][1] + dy[i]
-    #     if nx>=1 and ny>=1 and nx<N-1 and ny<M-1:
-    #         if graph[nx][ny] == ".":
-    #             flag1 = True
-    #             break
-    # if not flag1:
-    #     return -1
-    visited =[]
-    visited.append((ball[0][0],ball[0][1],ball[1][0],ball[1][1]))
-    cnt = 0
-    while q:
-        for _ in range(len(q)):
-            rx,ry,bx,by = q.popleft()
-            if cnt > 10:
-                return -1
-            if [rx,ry] == [hole[0],hole[1]]:
-                return cnt
-            for i in range(4):
-                # print(q)
-                nrx,nry,nbx,nby=rx,ry,bx,by
-                while 1:
-                    nrx += dx[i]
-                    nry += dy[i]
-                    if graph[nrx][nry] == "#":
-                        nrx = nrx - dx[i]
-                        nry = nry - dy[i]
-                        break
-                    if graph[nrx][nry] == "O":
-                        break
-                while 1:
-                    nbx += dx[i]
-                    nby += dy[i]
-                    if graph[nbx][nby] == "#":
-                        nbx = nbx - dx[i]
-                        nby = nby - dy[i]
-                        break
-                    if graph[nbx][nby] == "O":
-                        break
-                
-                if graph[nbx][nby] =="O":
-                    continue
-                # if graph[nrx][nry] == "O":
-                #     return cnt + 1
 
-                # 끝까지 밀어넣었는데 구슬 좌표가 같아진 경우
-                if [nbx,nby] == [nrx,nry]:
-                    # 빨간색이 앞서 있었던 경우
-                    if abs(nrx-rx) + abs(nry-ry) < abs(nbx-bx) + abs(nby-by):
-                        nbx -= dx[i]
-                        nby -= dy[i]
-                    else:
-                        nrx -= dx[i]
-                        nry -= dy[i]
-                    # if [rx - dx[i], ry - dy[i]] == [bx,by]:
-                    #     nbx = nbx - dx[i]
-                    #     nby = nby - dy[i]
-                    # # 파란색이 앞서 있었던 경우
-                    # elif [bx - dx[i], by - dy[i]] == [rx,ry]:
-                    #     nrx = nrx - dx[i]
-                    #     nry = nry - dy[i]
-                    
-                if (nrx,nry,nbx,nby) not in visited:
-                    q.append((nrx,nry,nbx,nby))
-                    visited.append((nrx,nry,nbx,nby))
-        cnt += 1 
-    return -1
-
-N,M = map(int,sys.stdin.readline().split())
+R,C,T = map(int,sys.stdin.readline().split())
+dx = [0,1,-1,0]
+dy = [1,0,0,-1]
 graph = []
-ball = [None,None]
-hole = []
-for i in range(N):
-    g = list(sys.stdin.readline().strip())
-    for j in range(M):
-        if g[j]=="R":
-            ball[0] = (i,j)
-        elif g[j] == "B":
-            ball[1] = (i,j)
-        elif g[j] == "O":
-            hole = (i,j)
+cleaner = []
+for i in range(R):
+    g = list(map(int,sys.stdin.readline().split()))
+    for j in range(C):
+        if g[j] == -1:
+            cleaner.append([i,j])
     graph.append(g)
 
-# for i in graph:
-#     print(i)
-# print(ball)
-# print(hole)
+for t in range(T):
+    new_g = [[0]*C for _ in range(R)]
+    for c in cleaner:
+        new_g[c[0]][c[1]] = -1
+    # 먼지 확산
+    for i in range(R):
+        for j in range(C):
+            if graph[i][j] not in [-1,0]:
+                if graph[i][j] >= 5:
+                    dust_5 = graph[i][j]//5
+                    cnt = 0
+                    for k in range(4):
+                        nx = i + dx[k]
+                        ny = j + dy[k]
+                        if nx>=0 and ny>=0 and nx<R and ny<C and new_g[nx][ny] != -1:
+                            new_g[nx][ny] += dust_5
+                            cnt += 1
+                    new_g[i][j] += graph[i][j] - (dust_5*cnt)
+                else:
+                    new_g[i][j] += graph[i][j]
+            # if graph[i][j] <5:
+            #     new_g[i][j] = graph[i][j]
+    # 공기 청정기 실행
+    # 위에 공기청정기
+    x1,y1 = cleaner[0]
+    for r1 in [2,0,1,3]:
+        while 1:
+            x1 += dx[r1]
+            y1 += dy[r1]
+            if x1<0 or y1<0 or x1>cleaner[0][0] or y1>=C :
+                x1 -= dx[r1]
+                y1 -= dy[r1]
+                break
+            if [x1,y1] == cleaner[0]:
+                break
+            if new_g[x1][y1]!=0 and new_g[x1-dx[r1]][y1-dy[r1]] == 0:
+                temp = new_g[x1][y1]
+                new_g[x1][y1] = 0
+                new_g[x1-dx[r1]][y1-dy[r1]] = temp
+            if new_g[x1][y1]!=0 and new_g[x1-dx[r1]][y1-dy[r1]] == -1:
+                new_g[x1][y1] = 0
+    # 아래 공기 청정기
+    x2,y2 = cleaner[1]
+    for r2 in [1,0,2,3]:
+        while 1:
+            # print(x2,y2)
+            x2 += dx[r2]
+            y2 += dy[r2]
+            if x2<cleaner[1][0] or y2<0 or x2>=R or y2>=C:
+                x2 -= dx[r2]
+                y2 -= dy[r2]
+                break
+            if [x2,y2] == cleaner[1]:
+                break
+            if new_g[x2][y2] != 0 and new_g[x2-dx[r2]][y2-dy[r2]] == 0:
+                temp = new_g[x2][y2]
+                new_g[x2][y2] = 0
+                new_g[x2-dx[r2]][y2-dy[r2]] = temp
+            if new_g[x2][y2] != 0 and new_g[x2-dx[r2]][y2-dy[r2]] == -1:
+                new_g[x2][y2] = 0
 
-result = ball_escape()
-print(result)
+    # 그래프 최신화
+    if t != T-1:
+        for i in range(R):
+            for j in range(C):
+                graph[i][j] = new_g[i][j]
 
-
-
+result = 0
+for n in new_g:
+    result += sum(n)
+print(result+2)
