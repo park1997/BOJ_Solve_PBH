@@ -1,49 +1,64 @@
-from collections import deque
-import sys
-def bfs(x,y,s_s):
-    global graph, baby_shark_size, eat_list, visited
-    q = deque() # Queue 선언
-    q.append([x,y,s_s]) # 시작 위치 x,y와 아기상어의 크기 append
-    dx = [-1,0,0,1]
-    dy = [0,-1,1,0]
-    graph[x][y] = 0 # 아기상어의 처음 위치를 0으로 비워준다.
-    while q:
-        a,b,s = q.popleft()
-        for i in range(4):
-            nx = a + dx[i]
-            ny = b + dy[i]
-            if nx>=0 and ny>=0 and nx<N and ny<N and visited[nx][ny] == 0:
-                if graph[nx][ny] == 0 or graph[nx][ny] <= s: # 아기상어가 갈 수 있는 빈칸(0) 이거나 아기상어의 크기보다 작거나 같은 크기를 가진 물고기 인 경우 => 이동은 할 수 있음
-                    q.append([nx,ny,s]) # 이동 할 수 있는 다음위치를 Queue에 저장
-                    visited[nx][ny] =  visited[a][b] + 1  # 이전에 왔던 곳 + 1 을 하여 그곳까지 갈 수 있는 거리를 저장한다.
-                if graph[nx][ny] != 0 and graph[nx][ny] < s: # 이동하려고 간 위치가 아닌 아기상어가 먹을 수 있는 물고기의 위치를 찾는다
-                    visited[nx][ny] =  visited[a][b] + 1 # 그곳까지 도달하기 위한 거리를 저장한다
-                    eat_list.append([nx,ny,visited[nx][ny]]) # 먹을 수 있는 물고기의 위치를 저장한다.
-N = int(sys.stdin.readline()) # 공간의 크기 N 입력
-baby_shark_size = 2 # 아기상어의 처음 Size
-graph = [list(map(int,sys.stdin.readline().split())) for _ in range(N)] # 아기 상어와 다른 물고기가 있는 그래프 
-start = [0,0] # 아기 상어가 있는 처음 위치
-for x in range(N):
-    for y in range(N):
-        if graph[x][y] == 9: # 아기 상어의 위치를 찾았을 시 
-            start[0] = x    # 아기 상어의 첫 위치 X값을 저장해준다
-            start[1] = y    # 아기 상어의 첫 위치 Y값을 저장해준다
-            break   # 아기상어는 1명 밖에 없으므로 찾으면 그냥 break 해준다.
-result = 0  # 최종 결과가 저장될 변수
-eat_num = 0 # 아기상어가 먹은 물고기의 개수가 들어갈 변수
-while 1:
-    visited = [[0]*N for _ in range(N)] # 아기상어가 먹을 수 있는 물고기의 위치를 찾기위해 bfs를 돌릴 때 방문하기위한 거리가 저장될 2차원 행렬
-    eat_list = [] # 아기상어가 먹을 수 있는 물고기의 위치가 저장될 리스트
-    bfs(start[0],start[1],baby_shark_size)  # 시작점 x,y와 아기상어의 크기가 매개변수로 들어간 bfs 함수
-    if len(eat_list)!=0: # 먹을 물고기를 찾은 경우
-        eat_list = list(sorted(eat_list,key= lambda x: (x[2],x[0],x[1])))   # 가장 가까우면서 가장 위쪽에 있으면서 가장 왼쪽에 있는 물고기를 먹기위해 정렬을 수행한다.
-        start = eat_list[0] # 선정될 다음에 먹을 고기 의 위치를 start 에 저장한다.
-    else:   # bfs를 돌렸을때 아기상어가 더이상 먹을 물고기가 존재 하지 않았을 시 반복문을 빠져 나가고 result 를 출력한다. 
-        break
-    eat_num += 1 # bfs로 물고기를 찾았으므로 물고기를 먹은 횟수 +1
-    result += visited[start[0]][start[1]] # 찾은 먹을 물고기를 먹으러 가는 거리를 result 에 더해준다. 
-    graph[start[0]][start[1]] = 9   # 찾은 먹이위치에 상어를 배치 시킨다.
-    if eat_num == baby_shark_size: # 아기상어 사이즈의 개수만큼 먹이를 먹었을 경우
-        baby_shark_size += 1    # 아기 상어의 크기를 +1 증가시켜 준다.
-        eat_num = 0 # 먹은 먹이의 개수 초기화
-print(result)
+print("                                                           :8DDDDDDDDDDDDDD$.                                           ")
+print("                                                      DDDNNN8~~~~~~~~~~=~7DNNDNDDDNNI                                   ")
+print("                                                  ?NNDD=~=~~~~~~~~~~~~~~~~~=~~==~=INNDNN7                               ")
+print("                                               +NDDI~~~~~~~~~~~~~~~~~~~~~~~=~~========~ODND+                            ")
+print("                                            :NND~~~~~~~~~~~~~~~~~~~~~~~~~~~=~~============7NDN                          ")
+print("                                          $DD$~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=~~==============~DNN                        ")
+print("                                        $DD=~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=~~=================NND                      ")
+print("                                       ND7~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=~~===================DD7                    ")
+print("                                     ~DD=~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=======================8DN.                  ")
+print("                                    8DO~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=========================DD                  ")
+print("                                   8N~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=~~=======================DN                 ")
+print("                                  NN::::::::~~~~~~~~~~~=~~~~~~~~~~~~~~~~~~~=~~========================DDO               ")
+print("                                 $D$:::::::::::::::~~~~DD~~~~~~~~~~~~~~~~~~=~~=========================DN.              ")
+print("                                 D8:::::::::::::::::::DN=::~~~~~~~~~~~~~~~~=~~======================~~:~DN              ")
+print("                                DN:::::::::::::::::::ONO::::::::::::::::::::~~~~~~~~~~~~:::::::::::::::::DN             ")
+print("                               DN::::::::::::::::::::NN.:::::::::::::::::::::::::::DN::::::::::::::::::::$DO            ")
+print("                               DD:::::::::::::::::::DNI:::::::::::::::::::::::::::::D=::::::::::::::::::::NN            ")
+print("                              NN~~~~:::::$N?:::::::.NN::::::::::::::::::::::::::::::ND.:::::::::::::::::::+N8           ")
+print("                              N7~~~~~~~~OD7::::::::~DD::::::::::::::::::::::::::::::~D$::::::::::::::::::::DN           ")
+print("                             NN~~~~~~~~IDZ~~~~~::::DN~:::::::::::::::::::::::::::::::DN::::::::::::::::::::=N~          ")
+print("                             DD~~~~~~~~NN~~~~~~~~~=NN::::::::::::::::::::::::::::::::DN:::::::::::::::~~====NN          ")
+print("                            8D~~~~~~~~ND~~~~~~~~~~~ND~~~~~~~~:::::::::::::::::::::::::N7:::~~===============NN          ")
+print("                            DD~~~~~~~ON+~~~~~~~~~~~ND~~~~~~~~~~~~~~~~~~~=+NZ==========NN====================~ND         ")
+print("               :DD7   DNDD. N8~~~~~~~NN~~~~~~~~~~DDND~~~~~~~~~~~~~~~~~~~~ND~~=========DD=====================ND         ")
+print("               N~:DDNNN .8NDN~~~~~~~$D=~~~~~~~~+ND.DD~~~~~~~~~~~~~~~~~~~=DD~~=========~D+====================DN         ")
+print("              :D     .  ..~ND~~~~~~~NN~~~~~~~+NN$..ND~~~~~~~~~~~~~~~~~~~7N=~~=========~ND=======~============ON         ")
+print("              NN       ...:N?~~~~~~~N=~~~~~NNNI.. .7D+~~~~~~~~~~~~~~~~~=8NN~~==========NN=======N============$N         ")
+print("         N  ODN       ....DN~~~~~~~DD=8NNND$..     .DD~~~=~~~~~~~~~~~~~=NNDD=~=========8D~======NN===========~N$        ")
+print("    N? =NN  ND      .....NND~~~~~~~DDNN:...        .ND=~DNN~~~~~~~~~~~~=DN.DN~=========?N+======NN============ND        ")
+print("   $D? DN    DZ    ....ND8NN~~~~~~$D                .DD~NNDD~~~~~~~~~~~~D8..DN=========~DN======NN============DN        ")
+print("   DN ~N~   NN    ..:~NN..NZ~~~~~~DN                  NNN8.ND~~~~NDN?~~~DZ...7DD=======~NN======NN============DN        ")
+print("   ND DD    :DN.  ..ND$  .N?~~~~~=NNN                   . ..DDD$~N8OND8=N+   ..DDDZ~====NN======+D+===========ND        ")
+print("   NO         DD  ZDN    8NO~~~~~~NNN..DDDNN7               ...NND...:DDD:     .:.NDND=~DD======~DO===========DN        ")
+print("              DNDDN:.    DN~~~~~~=NNNN.ODNNNNDDNNO              ...     .         ...DNNNN=======ND===========DD        ")
+print("       INDN7    DD.     .DD~~~~~=IDND:.:~.....?DNDNN.                        ...... ....$D=======ND===========ND        ")
+print("       NN        ND.    8N=~~~~$ND::.:=~:.~=......=ND~                 .NNNNNNNNNNNNNNN.~N+======NN===========DN        ")
+print("       $DD        DN:   DD~~~~7NO...~==.:~~:.....                      NNNND? ..::..7NZ.:N?======8D~==========ZN        ")
+print("       DN?     ~D: DND.?D~~~~~DD....~:.~=~.......                            ....~=:.:~..ND======~N$==========~DO       ")
+print("       ND    ..DD.  .DNDN=~~~~DI.......:.........                           ....=~..~~~..DN======~DD===========NN       ")
+print("       DDD  :.:DD.  . DDI~~~~~ND................        .DNNNNNNNNNN7      ....=~:.:~~...NN=======ND===========?D~      ")
+print("       8D. ...OD..    DD~~~~~~+ND ............          NN:~::::~~~8N      ........~~...:ND=======DN============NN      ")
+print("       DDI:...ND     .D7~~~~~~~7NN ..........           ID8::::::::8D      .............:DN=======ON============NN      ")
+print("        ~NNND.N=.   .NN~~~~~~~~~NDN8                       ~::::::~N8       .............DN========D=============NI     ")
+print("               DDNNN.ND~~~~~~~~DD =DND                                       ............DN========N+~===========NN     ")
+print("                   ~:N=~~~~~~~~DD   .DDDD                                       ........ NN========DD============8D     ")
+print("                    8N~~~~~~~~~ND    . .7NDDD? .                                      .8DDN========NN=============D:    ")
+print("                    DD~~~~~~~~~DND:         IDNNND$.                           .+DNNNNDNIDN========DD=============DD    ")
+print("                    ND~~~~~~~~ZN 7DD .. .:DDNDDNNDNNNNDDNDND8$?===+$8DDNNNDDDDDN8I~DN====8N========NN=============NN    ")
+print("                    DD~~~~~~~~8N   DD.  .NN~~~~.~~=DNDNO.:7ODDDDNNDD8DDDND=~~~ =~~~ON====8N========DN=============DN    ")
+print("                    ND~~~~~~~~DN    ZDD  DN~~~ ~~~~~=.7DDD+.......8NNN==~~~~~ ~~~~~ONN$==DN========8N=============ON    ")
+print("                    ND~8N~=~~~ZN      DDODN=~.~~~~~=.~~~~INDNNNNDNN~~~~~~~~:~~~~~~~DN~ND=DN========DD=========~ND=8N    ")
+print("                    IN=NDDI~~~~D8       DNN::~~~~~.~~~~~=.~~ND~~ND~~~~~~~~.~~~~~~~~NN  NDNN====ND==ND~D?======DNN=ND    ")
+print("                     DNNI8ND=~~DN:       ZN=~~~~~ ~~~~~.~~~~DD~=DD~~~~~~~ ~~~~~~~=.ND. . ND===DNDD=NDDNN=====8NZDDDN    ")
+print("                      NND  IDNDNNN+       D+~~~:~~~~~~ ~~~~~DDNNN+~~~~~~~~~~~~~~:=?N7   .ND=~ND  DNNN~ID====ND7 NNN     ")
+print("                       ID                 ND~~ ~~~~~:.~~~7DDN7IDNN==~~ ~~~~~~~~ ~~DN   .:N?DDDDD NND  8N~=DDD  ZNN      ")
+print("                                          NN~:~~~~~ =7DDDD+8N  :N8DDZ.~~~~~~~~.~~~DD.   NDD+ . DN=     OND+             ")
+print("                                          DND~~~=8DNDDZ=~~ ND   NN~INND~~~~~.~~~~ND .    .    ..IDD                     ")
+print("                                         DDNNNDNNN+~~~~~~.7N.    ND~~~NDDI~ ~~~~=NNN             .DDI                   ")
+print("                                        DN=~~~~.=~~~~~~ ~~DN     +N+~~~~+DNDD~~~NNNND.            ..ND                  ")
+print("                                         DDI~~ ~~~~~~~ ~~~ND..  ..ND~~~~:~~~DNDNNNN+            ..7O8ND+                ")
+print("                                          .DND=~~~~=::~~=NN.   . . 8D~~.~~~~~~=DN$ODNDNDNNNDNNNNND8+~..                 ")
+print("                                             8DNNI=.~~~~=NDDNNNNDDNDNN.~~~~~IDDNDND7:.                                  ")
+print("                                                ?DNNDD?~DD          ~NN~~=NDD$                                          ")
+print("                                                     :DDD.            NNNN=                                             ")
