@@ -9,7 +9,7 @@ def find_group_block():
     for i in range(N):
         for j in range(N):
             t = graph[i][j]
-            if t in [0,1,-2]:
+            if t in [0,-1,-2]:
                 continue
             q = deque()
             q.append([i,j])
@@ -18,6 +18,7 @@ def find_group_block():
             visited2 = [[False]*N for _ in range(N)]
             visited2[i][j] = True
             visited[i][j] = True
+            v2_cnt = 1
             while q:
                 a,b = q.popleft()
                 for d in range(4):
@@ -25,8 +26,9 @@ def find_group_block():
                     ny = b + dy[d]
                     if nx>=0 and ny>=0 and nx<N and ny<N and not visited2[nx][ny]:
                         if visited[nx][ny]:
-                            break
+                            continue
                         if graph[nx][ny] == t or graph[nx][ny] == 0:
+                            v2_cnt += 1
                             visited2[nx][ny] = True
                             visited[nx][ny] = True
                             q.append([nx,ny])
@@ -34,18 +36,28 @@ def find_group_block():
                                 color_cnt += 1
                             # if graph[nx][ny] == 0:
                             #     rainbow_cnt += 1
-
+            
+            # for v in visited2:
+            #     print(v)
+            # print()
+            # for v1 in visited:
+            #     print(v1)
+            # print()
             temp_block_group =[]
-            if color_cnt > 1:
+            if color_cnt >= 1 and v2_cnt>=2:
+                for v in visited2:
+                    print(v)
+                print()
                 for vi in range(N):
                     for vj in range(N):
                         if visited2[vi][vj]:
                             temp_block_group.append([vi,vj])
-                if color_cnt in block_group:
-                    block_group[color_cnt].append(temp_block_group)
+                if len(temp_block_group) in block_group:
+                    block_group[len(temp_block_group)].append(temp_block_group)
                 else:
-                    block_group[color_cnt] = []
-                    block_group[color_cnt].append(temp_block_group)
+                    block_group[len(temp_block_group)] = []
+                    block_group[len(temp_block_group)].append(temp_block_group)
+            
     return block_group
 
 
@@ -54,10 +66,16 @@ N,M = map(int,sys.stdin.readline().split())
 graph = [list(map(int,sys.stdin.readline().split())) for _ in range(N)]
 b = find_group_block()
 b_keys = list(sorted(b.keys()))
-print(b)
+result = 0
 while 1:
     b = find_group_block()
+    print(b)
+    for g in graph:
+        print(g)
+    print()
     b_keys = list(sorted(b.keys()))
+    if len(b_keys) ==0:
+        break
     target = b[b_keys[-1]]
     block_idx = 0
     # 크기가 가장 큰 블록이 1개인 경우
@@ -65,13 +83,14 @@ while 1:
         for t in target[0]:
             # 그래프 요소 삭제(삭제 된 애는 -2)
             graph[t[0]][t[1]] = -2
+        result += len(target[0])**2
     # 크기가 가장 큰 블록이 1개가 아닌경우
     else:
         rainbow_cnt = []
         # 군집 별 무지개 블록수 구하기 
         for idx,tar in enumerate(target):
             temp_rainbow_cnt = 0
-            for t in target:
+            for t in tar:
                 if graph[t[0]][t[1]] == 0:
                     temp_rainbow_cnt += 1
             rainbow_cnt.append(temp_rainbow_cnt)
@@ -102,25 +121,63 @@ while 1:
         for t in target[block_idx]:
             # 그래프 요소 삭제(삭제 된 애는 -2)
             graph[t[0]][t[1]] = -2
+        result += len(target[block_idx])**2
+    for g in graph:
+        print(g)
+    print()
+    # 중력 작용
+    for i in range(N-2,-1,-1):
+        for j in range(N):
+            if graph[i][j] > -1:
+                r =i
+                while 1:
+                    if 0<=r+1< N and graph[r+1][j] == -2:
+                        graph[r+1][j] = graph[r][j]
+                        graph[r][j] = -2
+                        r += 1
+                    else:
+                        break
+    for g in graph:
+        print(g)
+    print()
+    temp_graph = [[0]*N for _ in range(N)]
+    for i in range(N):
+        for j in range(N):
+            temp_graph[i][j] = graph[j][N-i-1]
 
-        # 중력 작용
-        for g_j in range(N):
-            go = 0
-            for g_i in range(N-1,-1,-1):
-                if graph[g_i][g_j] == -2:
-                    go += 1
-                elif graph[g_i][g_j] == -1:
-                    break
-            
-
-
-
-        
-
+    for i in range(N):
+        for j in range(N):
+            graph[i][j] = temp_graph[i][j]
+    for g in graph:
+        print(g)
+    print()
+    # 중력 작용
+    for i in range(N-2,-1,-1):
+        for j in range(N):
+            if graph[i][j] > -1:
+                r =i
+                while 1:
+                    if 0<=r+1< N and graph[r+1][j] == -2:
+                        graph[r+1][j] = graph[r][j]
+                        graph[r][j] = -2
+                        r += 1
+                    else:
+                        break
+    for g in graph:
+        print(g)
+    print()
 
     # print(target)
-    break
+    # break
 
-for g in graph:
-    print(g)
+print(result)
 
+
+'''
+5 4
+2 3 4 -1 -1
+1 -1 4 2 3
+4 3 3 1 1
+4 1 -1 2 2
+1 1 0 -1 0
+'''
