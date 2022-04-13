@@ -57,7 +57,10 @@ def find_group_block():
                 else:
                     block_group[len(temp_block_group)] = []
                     block_group[len(temp_block_group)].append(temp_block_group)
-            
+            for r in range(N):
+                for c in range(N):
+                    if graph[r][c] == 0:
+                        visited[r][c] = False
     return block_group
 
 
