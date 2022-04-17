@@ -1,29 +1,17 @@
 import sys
-import heapq
-def Djikstra(start):
-    q = []
-    heapq.heappush(q,[0,start])
-    distance[start] = 0
-    while q:
-        dis,node = heapq.heappop(q)
-        # if distance[node] < dis:
-        #     continue
-        for n,d in graph[node]:
-            new_d = dis + d
-            if distance[n] > new_d:
-                distance[n] = new_d
-                heapq.heappush(q,[new_d,n])
-
-V,E = map(int,sys.stdin.readline().split())
-start = int(sys.stdin.readline())
-graph = [[] for _ in range(V+1)]
-for _ in range(E):
-    a,b,c = map(int,sys.stdin.readline().split())
-    graph[a].append([b,c])
-distance = [int(1e9)]*(V+1)
-Djikstra(start)
-for i in range(1,len(distance)):
-    if distance[i] != int(1e9):
-        print(distance[i])
-    else:
-        print("INF")
+n = int(sys.stdin.readline())
+dp = [int(1e9)] *(n+1)
+dp[1] = 1
+for i in range(1,n):
+    if i**2<=n:
+        dp[i**2] = 1
+for i in range(1,n+1):
+    if dp[i] == 1:
+        continue
+    for j in range(1,i+1):
+        if i-j**2>=0:
+            dp[i] = min(dp[i],dp[i-j**2]+dp[j**2])
+        else:
+            break
+print(dp)
+print(dp[-1])
