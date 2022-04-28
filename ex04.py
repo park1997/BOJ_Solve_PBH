@@ -1,20 +1,10 @@
 import sys
 import heapq
+
 def main():
     
-
-    R,C,M = map(int,sys.stdin.readline().split())
-    dx = [-1,1,0,0]
-    dy = [0,0,1,-1]
-    graph = [[""]*C for _ in range(R)]
-    shark = []
-    for m in range(M):
-        r,c,s,d,z = map(int,sys.stdin.readline().split())
-        shark.append([r-1,c-1,s,d-1,z])
-        graph[r-1][c-1] = [r-1 , c-1 , s , d-1 , z]
-    gain = 0
-    def hunt(king):
-        global dx,dy,R,C,graph
+    def hunt(king,R,C):
+        # global dx,dy,graph
         for i in range(R):
             for j in range(C):
                 if j == king and len(graph[i][j])!=0:
@@ -23,7 +13,7 @@ def main():
                     return a
         return 0 
     def move():
-        global dx,dy,R,C,graph
+        # global dx,dy,R,C,graph
         q = []
         for i in range(R):
             for j in range(C):
@@ -59,8 +49,20 @@ def main():
                     break
             new_graph[r1][c1] = [r1 ,c1 ,s1 ,d1 ,z1]
         return new_graph
+    R,C,M = map(int,sys.stdin.readline().split())
+    dx = [-1,1,0,0]
+    dy = [0,0,1,-1]
+    graph = [[""]*C for _ in range(R)]
+    shark = []
+    for m in range(M):
+        r,c,s,d,z = map(int,sys.stdin.readline().split())
+        shark.append([r-1,c-1,s,d-1,z])
+        graph[r-1][c-1] = [r-1 , c-1 , s , d-1 , z]
+    gain = 0
+    
+    
     for king in range(C):
-        g = hunt(king)
+        g = hunt(king,R,C)
         gain += g
         n_g = move()
         graph = [ng[:] for ng in n_g]
