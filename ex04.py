@@ -1,72 +1,71 @@
 import sys
-import heapq
-
+from collections import deque
 def main():
-    
-    def hunt(king,R,C):
-        # global dx,dy,graph
-        for i in range(R):
-            for j in range(C):
-                if j == king and len(graph[i][j])!=0:
-                    a = graph[i][j][-1]
-                    graph[i][j] = ""
-                    return a
-        return 0 
-    def move():
-        # global dx,dy,R,C,graph
-        q = []
-        for i in range(R):
-            for j in range(C):
-                if len(graph[i][j]) != 0:
-                    r,c,s,d,z = graph[i][j]
-                    heapq.heappush(q,[z,r,c,s,d])
-        new_graph = [[""]*C for _ in range(R)]
-        while q:
-            z1,r1,c1,s1,d1 = heapq.heappop(q)
-            if s1 == 0:
-                new_graph[r1][c1] = [r1 ,c1 ,s1 ,d1 ,z1]
-                continue
-            cnt = 0
-            distance = s1 % (2 * C)
-            while 1:
-                cnt += 1
-                r1 += dx[d1]
-                c1 += dy[d1]
-                if r1<0 or c1<0 or r1>=R or c1>=C:
-                    r1 -= 2 * dx[d1]
-                    c1 -= 2 * dy[d1]
-                    # 방향 전환
-                    if d1 == 0:
-                        d1 = 1
-                    elif d1 == 1:
-                        d1 = 0
-                    elif d1 == 2:
-                        d1 = 3
-                    elif d1 == 3:
-                        d1 = 2
-                if cnt == distance:
-                    cnt = 0
-                    break
-            new_graph[r1][c1] = [r1 ,c1 ,s1 ,d1 ,z1]
-        return new_graph
-    R,C,M = map(int,sys.stdin.readline().split())
-    dx = [-1,1,0,0]
-    dy = [0,0,1,-1]
-    graph = [[""]*C for _ in range(R)]
-    shark = []
-    for m in range(M):
-        r,c,s,d,z = map(int,sys.stdin.readline().split())
-        shark.append([r-1,c-1,s,d-1,z])
-        graph[r-1][c-1] = [r-1 , c-1 , s , d-1 , z]
-    gain = 0
-    
-    
-    for king in range(C):
-        g = hunt(king,R,C)
-        gain += g
-        n_g = move()
-        graph = [ng[:] for ng in n_g]
-    print(gain)
 
-if __name__=="__main__":
+    def visit(start):
+        dx = [0,0,1,-1]
+        dy = [1,-1,0,0]
+        q = deque()
+        visited = [[-1]*N for _ in range(N)]
+        visited[start[0]][start[1]] = 0
+        q.append(start)
+        while q:
+            a,b = q.popleft()
+            for i in range(4):
+                nx = a + dx[i]
+                ny = b + dy[i]
+                if nx>=0 and ny>=0 and nx<N and ny<N and visited[nx][ny] == -1 and graph[nx][ny] != 1:
+                    visited[nx][ny] = visited[a][b] + 1
+                    q.append([nx,ny])
+        return visited
+        
+    def check_distance(visited,arrival):
+        for ar in arrival:
+            ar.append(visited[ar[0]][ar[1]])
+        arrival = list(sorted(arrival,key=lambda x : (-x[-1],-x[0],-x[1])))
+        return arrival
+        
+
+    N,M,F = map(int,sys.stdin.readline().split())
+    graph = [list(map(int,sys.stdin.readline().split())) for _ in range(N)]
+    driver = [0,0]
+    a,b = map(int,sys.stdin.readline().split())
+    driver[0] = a - 1
+    driver[1] = b - 1
+    arrival = []
+    for _ in range(M):
+        a,b,c,d = map(int,sys.stdin.readline().split())
+        arrival.append([a-1,b-1,c-1,d-1])
+    
+    while arrival:
+        visited = visit(driver)
+        arr = check_distance(visited,arrival)
+        arrival = [a[:] for a in arr]
+        px,py,ax,ay,dist1 = arrival.pop()
+        for t in arrival:
+            t.pop()
+        visited = visit([px,py])
+        dist2 = visited[ax][ay]
+        driver = [ax,ay]
+        if dist1 == -1 or dist2 == -1:
+            F = -1
+            break
+        F -= dist1
+        if F < 0 :
+            break
+        F -= dist2
+        if F < 0:
+            break
+        F += dist2 * 2
+    
+    if F<0:
+        print(-1)
+    else:
+        print(F)
+
+
+
+
+
+if __name__ == '__main__':
     main()
