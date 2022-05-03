@@ -1,9 +1,7 @@
-def main():
-    def hello():
-        a[0] += 1
+import sys
+def recur(N,M):
+    
+    return
 
-    a = [1]
-
-
-if __name__ == '__main__':
-    main()
+N,M = map(int,sys.stdin.readline().split())
+recur(N,M)
