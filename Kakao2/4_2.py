@@ -16,8 +16,8 @@ def solution(n, paths, gates, summits):
                 real_inten = inten
                 if now_visited[next_node]:
                     continue
-                # if next_node in gates:
-                #     continue
+                if next_node in gates:
+                    continue
                 if real_inten < now_inten:
                     real_inten = now_inten
                 new_visited = [n for n in now_visited]
@@ -35,7 +35,6 @@ def solution(n, paths, gates, summits):
     r = bfs(summits,gates)
 
     return r
-
 n = 7
 paths = [[1, 2, 5], [1, 4, 1], [2, 3, 1], [2, 6, 7], [4, 5, 1], [5, 6, 1], [6, 7, 1]]
 
