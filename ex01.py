@@ -1,48 +1,62 @@
-from collections import deque
-import heapq
-def solution(n, start, end, roads, traps):
-    def change_graph(graph,t):
-        new_graph = [[] for _ in range(n+1)]
-        for i,gra in enumerate(graph):
-            for g in gra:
-                node,distance = g
-                if i == t or node == t:
-                    new_graph[node].append([i,distance])
-                else:
-                    new_graph[i].append([node,distance])
-        return new_graph
-    
-    
-    def bfs(start,end,graph):
-        q = []
-        heapq.heappush(q,[0,start,graph])
-        cnt = 0
-        while q:
-            cnt += 1
-            print(q)
-            distance,node,now_graph = heapq.heappop(q)
-            print(node,distance,now_graph)
-            if node == end:
-                return distance
-            for no,dis in now_graph[node]:
-                print(dis,no)
-                if no in traps:
-                    graph = change_graph(graph,no)
-                    heapq.heappush(q,[distance + dis, no, graph])
-                else:
-                    heapq.heappush(q,[distance + dis, no, now_graph])
-            if cnt == 10:
-                break
-                    
+def solution(board, skill):
     answer = 0
-    graph = [[] for _ in range(n+1)]
-    for r in roads:
-        a,b,c = r
-        graph[a].append([b,c])
+    N = len(board)
+    M = len(board[0])
+    print(N,M)
+    prefix_graph = [[0]*(M+1) for _ in range(N+1)]
+    # for i in range(1,N):
+    #     for j in range(1,M):
+    #         prefix_graph[i][j] = board[i-1][j-1]
     
-    answer = bfs(start,end,graph)
+    # for i in range(1,N):
+    #     for j in range(1,M):
+    #         prefix_graph[i][j] = prefix_graph[i-1][j] + prefix_graph[i][j-1] - prefix_graph[i-1][j-1] + prefix_graph[i][j]
+
+    # for p in prefix_graph:
+    #     print(p)
     
+    for p in prefix_graph:
+        print(p)
+    print()
+    for b in board:
+        print(b)
+    for type,r1,c1,r2,c2,degree in skill:
+        if type == 1:
+            prefix_graph[r1][c1] -= degree
+            prefix_graph[r1][c2+1] += degree
+            prefix_graph[r2+1][c1] += degree
+            prefix_graph[r2+1][c2+1] -= degree
+        elif type == 2:
+            prefix_graph[r1][c1] += degree
+            prefix_graph[r1][c2+1] -= degree
+            prefix_graph[r2+1][c1] -= degree
+            prefix_graph[r2+1][c2+1] += degree
+    
+    for i in range(N-1):
+        for j in range(M-1):
+            prefix_graph[i][j+1] += prefix_graph[i][j]
+    
+    for j in range(M-1):
+        for i in range(N-1):
+            prefix_graph[i+1][j] += prefix_graph[i][j]
+    
+    for i in range(M-1):
+        for j in range(N-1):
+            prefix_graph[i][j] += board[i][j]
+    
+    for p in prefix_graph:
+        print(p)
+
+
+
+
     return answer
 
-a = solution(4,1,4,[[1, 2, 1], [3, 2, 1], [2, 4, 1]],[2,3])
-print(a)
+
+board = [[5,5,5,5,5],[5,5,5,5,5],[5,5,5,5,5],[5,5,5,5,5]]
+skill = [[1,0,0,3,4,4],[1,2,0,2,3,2],[2,1,0,3,1,2],[1,0,1,3,3,1]]
+
+
+
+ans = solution(board,skill)
+print(ans)

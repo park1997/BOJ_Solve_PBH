@@ -17,7 +17,7 @@ def spanning_tree(s):
         for i,d in graph[a]:
             if not visited[i]:
                 heapq.heappush(q,[d,i])
-    return result
+    return result 
 
 V,E = map(int,sys.stdin.readline().split())
 graph = [[] for _ in range(V+1)]
