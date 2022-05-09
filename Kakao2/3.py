@@ -19,8 +19,17 @@ def solution(alp, cop, problems):
             break
 
         # 현재 문제를 해결가능 -> 다음문제 해결하기 위해 현재 문제를 얼마나 더 풀어야 할지
-        next_need_alp, next_neex_cop, next_gain_alp, next_gain_cop, next_pay_time = problems[idx + 1]
-        if alp < next_need_alp
+        next_need_alp, next_need_cop, next_gain_alp, next_gain_cop, next_pay_time = problems[idx + 1]
+        # 깡으로 능력 늘리고 다음문제 풀수있을때 드는 시간
+        time1 = 0
+        if alp < next_need_alp or cop < next_need_cop:
+            if alp < next_need_alp:
+                time1 += next_need_alp - alp
+            if cop < next_need_cop:
+                time1 += next_need_cop - cop
+        
+        time2 = 0
+        
 
 
 
