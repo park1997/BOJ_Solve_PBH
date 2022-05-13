@@ -1,37 +1,55 @@
-def solution(board, skill):
-    answer = 0
-    tmp = [[0] * (len(board[0]) + 1) for _ in range(len(board) + 1)] # 누적합 기록을 위한 배열
- 
-    for type, r1, c1, r2, c2, degree in skill:
-        # 누적합 기록, 부호에 주의할 것
-        tmp[r1][c1] += degree if type == 2 else -degree
-        tmp[r1][c2 + 1] += -degree if type == 2 else degree
-        tmp[r2 + 1][c1] += -degree if type == 2 else degree
-        tmp[r2 + 1][c2 + 1] += degree if type == 2 else -degree
- 
-    # 행 기준 누적합
-    for i in range(len(tmp) - 1):
-        for j in range(len(tmp[0]) - 1):
-            tmp[i][j + 1] += tmp[i][j]
- 
-    # 열 기준 누적합
-    for j in range(len(tmp[0]) - 1):
-        for i in range(len(tmp) - 1):
-            tmp[i + 1][j] += tmp[i][j]
- 
-    # 기존 배열과 합함
-    for i in range(len(board)):
-        for j in range(len(board[i])):
-            board[i][j] += tmp[i][j]
-            # board에 값이 1이상인 경우 answer++
-            if board[i][j] > 0: answer += 1
-    # for t im tmp:
-    #     p
-    return answer
-board = [[5,5,5,5,5],[5,5,5,5,5],[5,5,5,5,5],[5,5,5,5,5]]
-skill = [[1,0,0,3,4,4],[1,2,0,2,3,2],[2,1,0,3,1,2],[1,0,1,3,3,1]]
+import sys
+from collections import deque
+def bfs(start):
+    global population
+    visited[start[0]][start[1]] = True
+    dx = [0,0,1,-1]
+    dy = [1,-1,0,0]
+    q = deque([start])
+    union = []
+    while q:
+        a,b = q.popleft()
+        for i in range(4):
+            nx = a + dx[i]
+            ny = b + dy[i]
+            if nx>=0 and ny>=0 and nx<N and ny<N and not visited[nx][ny]:
+                if L<= abs(graph[a][b]-graph[nx][ny])<=R:
+                    q.append([nx,ny])
+                    union.append([nx,ny])
+                    visited[nx][ny] = True
+                    visited[a][b] = True
+                    if [a,b] not in union:
+                        union.append([a,b])
+
+    if len(union) != 0:
+        population.append(union)
+
+N,L,R = map(int,sys.stdin.readline().split())
+graph = [list(map(int,sys.stdin.readline().split())) for _ in range(N)]
+day = 0
+while 1:
+    
+    population = []
+    visited = [[False]*N for _ in range(N)]
+    for i in range(N):
+        for j in range(N):
+            bfs([i,j])
+            
+    if len(population) ==0:
+        print(day)
+        break
+    else:
+        for p in population:
+            mean = 0
+            for u in p:
+                mean += graph[u[0]][u[1]]
+            mean = mean // len(p)
+            for u in p:
+                graph[u[0]][u[1]] = mean
+    day += 1
+    for g in graph:
+        print(g)
+    print()
 
 
 
-ans = solution(board,skill)
-print(ans)

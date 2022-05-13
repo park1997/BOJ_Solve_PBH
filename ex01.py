@@ -1,62 +1,57 @@
-def solution(board, skill):
-    answer = 0
-    N = len(board)
-    M = len(board[0])
-    print(N,M)
-    prefix_graph = [[0]*(M+1) for _ in range(N+1)]
-    # for i in range(1,N):
-    #     for j in range(1,M):
-    #         prefix_graph[i][j] = board[i-1][j-1]
+import sys 
+input = sys.stdin.readline
+
+N, L , R = map(int,input().split())
+
+dx = [0,0,1,-1]
+dy = [1,-1,0,0]
+
+
+def dfs(x,y) :
+    global sum, cnt ,ok 
+    sum+=graph[x][y]
+    cnt +=1 
+    visited[x][y] = 1
+    visited2.append([x,y])
+    for a in range(4):
+        nx = x+dx[a] 
+        ny = y+dy[a]
+        if 0<=nx<N and 0<=ny<N and not visited[nx][ny] and L<=abs(graph[nx][ny]-graph[x][y])<=R:
+            ok = False
+            dfs(nx,ny)
+    return sum // cnt
+
+graph = []
+count = 0
+
+for i in range(N):
+    graph.append(list(map(int,input().split())))
+
+while True :
+    visited = [[0]*N for _ in range(N)]
+    ok = True
+    nums = []
+    for i in range(N):
+        for j in range(N):
+            sum = 0
+            cnt = 0 
+            visited2 = []
+            if visited[i][j] == 0:
+                avg = dfs(i,j)
+                if cnt >= 2 :
+                    for xy in visited2 :
+                        nums.append([avg,xy])
+                    
+    if ok :
+        break
+
+
+    for i in nums:
+        x,y = i[1]
+        graph[x][y] = i[0]
     
-    # for i in range(1,N):
-    #     for j in range(1,M):
-    #         prefix_graph[i][j] = prefix_graph[i-1][j] + prefix_graph[i][j-1] - prefix_graph[i-1][j-1] + prefix_graph[i][j]
 
-    # for p in prefix_graph:
-    #     print(p)
-    
-    for p in prefix_graph:
-        print(p)
-    print()
-    for b in board:
-        print(b)
-    for type,r1,c1,r2,c2,degree in skill:
-        if type == 1:
-            prefix_graph[r1][c1] -= degree
-            prefix_graph[r1][c2+1] += degree
-            prefix_graph[r2+1][c1] += degree
-            prefix_graph[r2+1][c2+1] -= degree
-        elif type == 2:
-            prefix_graph[r1][c1] += degree
-            prefix_graph[r1][c2+1] -= degree
-            prefix_graph[r2+1][c1] -= degree
-            prefix_graph[r2+1][c2+1] += degree
-    
-    for i in range(N-1):
-        for j in range(M-1):
-            prefix_graph[i][j+1] += prefix_graph[i][j]
-    
-    for j in range(M-1):
-        for i in range(N-1):
-            prefix_graph[i+1][j] += prefix_graph[i][j]
-    
-    for i in range(M-1):
-        for j in range(N-1):
-            prefix_graph[i][j] += board[i][j]
-    
-    for p in prefix_graph:
-        print(p)
+    count +=1
 
 
-
-
-    return answer
-
-
-board = [[5,5,5,5,5],[5,5,5,5,5],[5,5,5,5,5],[5,5,5,5,5]]
-skill = [[1,0,0,3,4,4],[1,2,0,2,3,2],[2,1,0,3,1,2],[1,0,1,3,3,1]]
-
-
-
-ans = solution(board,skill)
-print(ans)
+print(count)
