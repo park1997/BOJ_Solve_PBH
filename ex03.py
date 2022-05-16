@@ -84,10 +84,7 @@ def change_graph(graph):
         new_graph[mid][j2] = col[j2]
     for i2 in range(N-1,-1,-1):
         new_graph[i2][mid] = row[N-i2-1]
-    
-    # for g in new_graph:
-    #     print(g)
-    # print()
+
 
     g1 = [[0]*mid for _ in range(mid)]
     g2 = [[0]*mid for _ in range(mid)]
@@ -124,10 +121,6 @@ def change_graph(graph):
             elif i>mid and j>mid:
                 new_graph[i][j] = g4[i-mid-1][j-mid-1]
     
-    # for g in new_graph:
-    #     print(g)
-
-
     return new_graph
 
 
