@@ -1,55 +1,52 @@
-import sys
-from collections import deque
-def bfs(start):
-    global population
-    visited[start[0]][start[1]] = True
-    dx = [0,0,1,-1]
-    dy = [1,-1,0,0]
-    q = deque([start])
-    union = []
-    while q:
-        a,b = q.popleft()
-        for i in range(4):
-            nx = a + dx[i]
-            ny = b + dy[i]
-            if nx>=0 and ny>=0 and nx<N and ny<N and not visited[nx][ny]:
-                if L<= abs(graph[a][b]-graph[nx][ny])<=R:
-                    q.append([nx,ny])
-                    union.append([nx,ny])
-                    visited[nx][ny] = True
-                    visited[a][b] = True
-                    if [a,b] not in union:
-                        union.append([a,b])
+N, M, K = map(int, input().split())
+fireballs = []
+for _ in range(M):
+    _r, _c, _m, _s, _d = list(map(int, input().split()))
+    fireballs.append([_r-1, _c-1, _m, _s, _d])
 
-    if len(union) != 0:
-        population.append(union)
+MAP = [[[] for _ in range(N)] for _ in range(N)]
 
-N,L,R = map(int,sys.stdin.readline().split())
-graph = [list(map(int,sys.stdin.readline().split())) for _ in range(N)]
-day = 0
-while 1:
-    
-    population = []
-    visited = [[False]*N for _ in range(N)]
-    for i in range(N):
-        for j in range(N):
-            bfs([i,j])
-            
-    if len(population) ==0:
-        print(day)
-        break
-    else:
-        for p in population:
-            mean = 0
-            for u in p:
-                mean += graph[u[0]][u[1]]
-            mean = mean // len(p)
-            for u in p:
-                graph[u[0]][u[1]] = mean
-    day += 1
-    for g in graph:
+dx = [-1, -1, 0, 1, 1, 1, 0, -1]
+dy = [0, 1, 1, 1, 0, -1, -1, -1]
+
+for _ in range(K):
+    for g in fireballs:
+        print(g)
+    print()
+    # 파이어볼 이동
+    while fireballs:
+        cr, cc, cm, cs, cd = fireballs.pop(0)
+        nr = (cr + cs * dx[cd]) % N  # 1번-N번 행 연결되어있기 때문
+        nc = (cc + cs * dy[cd]) % N
+        MAP[nr][nc].append([cm, cs, cd])
+
+    # 2개 이상인지 체크
+    for r in range(N):
+        for c in range(N):
+            # 2개 이상인 경우 -> 4개의 파이어볼로 쪼개기
+            if len(MAP[r][c]) > 1:
+                sum_m, sum_s, cnt_odd, cnt_even, cnt = 0, 0, 0, 0, len(MAP[r][c])
+                while MAP[r][c]:
+                    _m, _s, _d = MAP[r][c].pop(0)
+                    sum_m += _m
+                    sum_s += _s
+                    if _d % 2:
+                        cnt_odd += 1
+                    else:
+                        cnt_even += 1
+                if cnt_odd == cnt or cnt_even == cnt:  # 모두 홀수이거나 모두 짝수인 경우
+                    nd = [0, 2, 4, 6]
+                else:
+                    nd = [1, 3, 5, 7]
+                if sum_m//5:  # 질량 0이면 소멸
+                    for d in nd:
+                        fireballs.append([r, c, sum_m//5, sum_s//cnt, d])
+
+            # 1개인 경우
+            if len(MAP[r][c]) == 1:
+                fireballs.append([r, c] + MAP[r][c].pop())
+    for g in fireballs:
         print(g)
     print()
 
-
-
+print(sum([f[2] for f in fireballs]))

@@ -29,9 +29,6 @@ def mapping_num(graph):
                                 visited[nx][ny] = True
                                 group_cnt += 1
                 mapping_dic[cnt] = [target,group_cnt]
-    # for g in new_graph:
-    #     print(g)
-    # print(mapping_dic)
     return new_graph, mapping_dic
 
 def find_num(graph):
