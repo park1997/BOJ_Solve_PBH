@@ -1,56 +1,80 @@
-def solution(new_id):
-    answer = new_id
-    # 1
-    new_id = new_id.lower()
-    # 2
-    temp_id = ""
-    for s in new_id:
-        if (97<=ord(s)<=122) or (s in ["-","_","."]) or (48<=ord(s)<=57):
-            temp_id += s
-    new_id = temp_id
-    # 3
-    while 1:
-        if ".." in new_id:
-            new_id = new_id.replace("..",".")
-        else:
-            break
-    # 4
-    while 1:
-        flag =True
-        if new_id[0] == ".":
-            new_id = new_id[1:]
-            flag = False
-        if len(new_id) == 0:
-            break
-        if new_id[-1] == ".":
-            new_id = new_id[:-1]
-            flag = False
-        if len(new_id) == 0:
-            break
-        if flag:
-            break
-    # 5
-    if len(new_id) == 0:
-        new_id = "a"
-    # 6
-    if len(new_id) >= 16:
-        new_id = new_id[:15]
-        while 1:
-            if new_id[-1] == ".":
-                new_id = new_id[:-1]
-            else:
-                break
-    # 7
-    if len(new_id) <= 2:
-        while 1:
-            new_id += new_id[-1]
-            if len(new_id) == 3:
-                break
-    answer = new_id
-    return answer
+import sys
+from collections import deque
+def waterMove(graph,water):
+    dx = [0,0,1,-1]
+    dy = [1,-1,0,0]
+    q = deque()
+    for w in water:
+        q.append(w)
+    temp_water = []
+    while q:
+        a,b = q.popleft()
+        for i in range(4):
+            nx = a + dx[i]
+            ny = b + dy[i]
+            if nx>=0 and ny>=0 and nx<R and ny<C:
+                if graph[nx][ny] == ".":
+                    temp_water.append([nx,ny])
+                    graph[nx][ny] = "*"
+    return temp_water,graph
+
+def goGosem(graph,start):
+    global visited, R, C
+    dx = [0,0,1,-1]
+    dy = [1,-1,0,0]
+    q = deque()
+    for st in start:
+        visited[st[0]][st[1]] = True
+        q.append(st)
+    gosem = []
+    while q:
+        a,b = q.popleft()
+        for i in range(4):
+            nx = a + dx[i]
+            ny = b + dy[i]
+            if nx>=0 and ny>=0 and nx<R and ny<C and not visited[nx][ny]:
+                if graph[nx][ny] == "." or graph[nx][ny] == "D":
+                    gosem.append([nx,ny])
+                    visited[nx][ny] = True
+    return gosem
+
+R,C = map(int,sys.stdin.readline().split())
+graph = []
+d = []
+s = []
+w = []
+for i in range(R):
+    l = list(sys.stdin.readline().strip())
+    for j in range(C):
+        if l[j] == "D":
+            d.append([i,j])
+        if l[j] == "S":
+            s.append([i,j])
+            l[j] = "."
+        if l[j] == "*":
+            w.append([i,j])
+    graph.append(l)
+visited = [[False]*C for _ in range(R)]
+cnt = 0
+flag = False
+while True:
+    cnt += 1
+    temp_s = goGosem(graph,s)
+    w, graph = waterMove(graph,w)
+    s = []
+    for po in temp_s:
+        if po not in w:
+            s.append(po)
+        if po == d[0]:
+            flag = True
+    if len(s) == 0:
+        print("KAKTUS")
+        break
+
+    if flag:
+        print(cnt)
+        break
 
 
 
 
-answer = solution("123_.def")
-print(answer)
