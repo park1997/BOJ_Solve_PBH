@@ -18,7 +18,9 @@ def monkey(graph):
             nx = a + dx[i]
             ny = b + dy[i]
             if nx>=0 and ny>=0 and nx<W and ny<H and not visited[nx][ny] and graph[nx][ny] != 1:
-                heapq.heappush(q,[d+1,nx,ny])
+                
+                heapq.heappush(q,[d+1,k+1,nx,ny])
+                
                 visited[nx][ny] = True
     return -1
 
