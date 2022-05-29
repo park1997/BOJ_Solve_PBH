@@ -28,6 +28,7 @@ for _ in range(E):
 visited = [False] * (V+1)
 r = spanning_tree(1)
 print(r)
+
 '''
 3 3
 1 2 1

@@ -25,3 +25,5 @@ def solution(queue1,queue2):
                 answer = cnt
                 return answer
     return -1
+# 싸이클을 어떻게 찾아야할까?
+# 일차원으로 만들어서 투포인터로 
