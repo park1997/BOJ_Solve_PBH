@@ -46,3 +46,18 @@ problems = [[10,15,2,1,2],[20,20,3,3,4]]
 
 ans = solution(alp,cop,problems)
 print(ans)
+
+
+    # for(int i = 0; i < max_al; i++)
+    # {
+    #     for(int j = 0; j < max_cp; j++)
+    #     {
+    #         for(problem)
+    #         {
+    #             a = 증가하는 알고력
+    #             b = 증가하는 코딩력
+    #             i+a 최대보다 크면 i+a = 최대 
+    #             dp[i+a][j+b] = min(dp[i+a][j+b], dp[i][j]+time);
+    #         }
+    #     }
+    # }
