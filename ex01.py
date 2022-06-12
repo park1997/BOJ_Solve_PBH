@@ -1,67 +1,38 @@
-import sys
-def fire_shark(graph):
-    global dx,dy
-    temp_graph = [[[] for _ in range(N)] for _ in range(N)]
-    for i in range(N):
-        for j in range(N):
-            if len(graph[i][j]) != 0:
-                for g in graph[i][j]:
-                    m,s,d = g
-                    nx = (i + s * dx[d]) % N
-                    ny = (j + s * dy[d]) % N
-                    temp_graph[nx][ny].append((m,s,d))
-    return temp_graph
-    
-def spread_fire(graph):
-    temp_graph = [[[] for _ in range(N)] for _ in range(N)]
-    for i in range(N):
-        for j in range(N):
-            if len(graph[i][j]) >= 2:
-                even = 0
-                temp_m = 0
-                temp_s = 0
-                for tg in graph[i][j]:
-                    m1,s1,d1 = tg
-                    # 방향이 짝수인지
-                    if d1 % 2 == 0:
-                        even += 1
-                    temp_m += m1
-                    temp_s += s1
-                temp_m = temp_m // 5
-                temp_s = temp_s // len(graph[i][j])
-                if temp_m != 0:
-                    if even == len(graph[i][j]) or even == 0:
-                        for d in [0,2,4,6]:
-                            temp_graph[i][j].append((temp_m,temp_s,d))
-                    else:
-                        for d in [1,3,5,7]:
-                            temp_graph[i][j].append((temp_m,temp_s,d))
-                else:
-                    temp_graph[i][j] = []
-            elif len(graph[i][j]) == 1:
-                temp_graph[i][j].append(graph[i][j][0])
-    return temp_graph
+from collections import deque
+import heapq
+def solution(grid,k):
+    def bfs(start,k):
+        graph = [list(g) for g in grid]
+        dx = [0,0,1,-1]
+        dy = [1,-1,0,0]
+        N = len(graph)
+        M = len(graph[0])
+        visited1 = [[False]*M for _ in range(N)]
+        visited1[0][0] = True
+        q1 = []
+        heapq.heappush(q1,[0,start[0],start[1]])
+        while q1:
+            visited2 = [[False]*M for _ in range(N)]
+            ya_young,a,b = heapq.heappop(q1)
+            q2 = deque()
+            q2.append([a,b])
+            while q2:
+                a2, b2 = q2.popleft()
+                for i in range(4):
+                    nx = a2 + dx[i]
+                    ny = b2 + dy[i]
+                    if nx>=0 and ny>=0 and nx<N and ny<M:
+                        if not visited2[nx][ny] and graph[nx][ny] in [".","F"]:
+                            visited2[nx][ny] = True
+                            if abs(a-nx) + abs(b-ny) <= k:
+                                q2.append([nx,ny])
+                                if graph[nx][ny] == ".":
+                                    visited1[nx][ny] = True
+                                    q1.append([ya_young + 1,nx,ny])
+                                    if [nx,ny] == [N-1,M-1]:
+                                        return ya_young
 
-
-
-N,M,K = map(int,sys.stdin.readline().split())
-fire = []
-graph = [[[] for _ in range(N)] for _ in range(N)]
-for _ in range(M):
-    r,c,m,s,d = map(int,sys.stdin.readline().split())
-    fire.append([r-1,c-1,m,s,d])
-    graph[r-1][c-1].append((m,s,d))
-dx = [-1,-1,0,1,1,1,0,-1]
-dy = [0,1,1,1,0,-1,-1,-1]
-
-for _ in range(K):
-    graph = fire_shark(graph)
-    graph = spread_fire(graph)
-
-result = 0
-for gra in graph:
-    for gr in gra:
-        for g in gr:
-            result += g[0]
-print(result)
-
+    result = bfs([0,0],k)
+    print(result)
+    return result
+print(solution([".F.FFFFF.F", ".########.", ".########F", "...######F", "##.######F", "...######F", ".########F", ".########.", ".#...####F", "...#......"], 6))
