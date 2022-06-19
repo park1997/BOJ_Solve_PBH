@@ -14,7 +14,6 @@ def rotate(l):
             y = 0
         if x>=NN:
             break
-    print(left_top)
     for nx,ny in left_top:
         new_graph = []
         for y in range(ny, ny + length, 1):
@@ -44,15 +43,10 @@ def rotate(l):
                 pass
             else:
                 minus_.append([i,j])
-    print(minus_)
-    for g in graph:
-        print(g)
-    print()
+
     for mgx,mgy in minus_:
         graph[mgx][mgy] -= 1
-    for g in graph:
-        print(g)
-    print()
+
 
 def bfs(graph):
     dx = [0,0,-1,1]
