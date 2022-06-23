@@ -1,96 +1,40 @@
 import sys
-from collections import deque
-def rotate(l):
-    length = 2 ** l
-    left_top = []
-    x = 0
-    y = 0
-    while True:
-        if 0<=y<NN:
-            left_top.append([x,y])
-            y += length
-        else:
-            x += length
-            y = 0
-        if x>=NN:
-            break
-    for nx,ny in left_top:
-        new_graph = []
-        for y in range(ny, ny + length, 1):
-            temp = []
-            for x in range(nx + length - 1, nx - 1, -1):
-                temp.append(graph[x][y])
-            new_graph.append(temp)
+import heapq
+def Djikstra(start):
+    global m, n, r
+    distance = [int(1e9)] * (n+1)
+    distance[start] = 0
+    q = []
+    heapq.heappush(q,[0,start])
+    while q:
+        dis, now_node = heapq.heappop(q)
+        if dis > m:
+            continue
+        if distance[now_node] < dis:
+            continue
+        for next_node, d in graph[now_node]:
+            new_dis = dis + d
+            if new_dis <= m and new_dis < distance[next_node]:
+                distance[next_node] = new_dis
+                heapq.heappush(q,[new_dis,next_node])
+    return distance
 
-        for i in range(length):
-            for j in range(length):
-                graph[nx + i][ny + j] = new_graph[i][j]
-    minus_ = []
-    dx = [0,0,-1,1]
-    dy = [1,-1,0,0]
-    for i in range(NN):
-        for j in range(NN):
-            if graph[i][j] == 0:
-                continue
-            ice_cnt = 0
-            for d in range(4):
-                nx = i + dx[d]
-                ny = j + dy[d]
-                if 0<=nx<NN and 0<=ny<NN:
-                    if graph[nx][ny] >= 1:
-                        ice_cnt += 1
-            if ice_cnt >= 3:
-                pass
-            else:
-                minus_.append([i,j])
-
-    for mgx,mgy in minus_:
-        graph[mgx][mgy] -= 1
-
-
-def bfs(graph):
-    dx = [0,0,-1,1]
-    dy = [1,-1,0,0]
-    visited = [[False]*NN for _ in range(NN)]
-    q = deque()
-    
-    max_cnt = 0
-    for i in range(NN):
-        for j in range(NN):
-            if graph[i][j] >= 1:
-                m_cnt = 1
-                q.append([i,j])
-                visited[i][j] = True
-                while q:
-                    a,b = q.popleft()
-                    for i in range(4):
-                        nx = a + dx[i]
-                        ny = b + dy[i]
-                        if nx>=0 and ny>=0 and nx<NN and ny<NN and not visited[nx][ny] and graph[nx][ny] >= 1:
-                            visited[nx][ny] = True
-                            q.append([nx,ny])
-                            m_cnt += 1
-                if max_cnt < m_cnt:
-                    max_cnt = m_cnt
-    return max_cnt
-
-
-N, Q = map(int, sys.stdin.readline().split())
-NN = 2 ** N
-graph = [list(map(int,sys.stdin.readline().split())) for _ in range(NN)]
-L = list(map(int,sys.stdin.readline().split()))
-
-for l in L:
-    rotate(l)
-
-
-result1 = 0
-for g in graph:
-    result1 += sum(g)
-print(result1)
-result2 = bfs(graph)
-print(result2)
-
-
-
-
+n,m,r = map(int,sys.stdin.readline().split())
+items = list(map(int,sys.stdin.readline().split()))
+graph = [[] for _ in range(n+1)]
+for _ in range(r):
+    a,b,l = map(int,sys.stdin.readline().split())
+    graph[a].append([b,l])
+    graph[b].append([a,l])
+result = -1
+for node in range(1,n+1):
+    d = Djikstra(node)
+    temp_result = 0
+    for idx, i in enumerate(d):
+        if idx == 0:
+            continue
+        if i <= m:
+            temp_result += items[idx-1]
+    if temp_result > result:
+        result = temp_result
+print(result)
