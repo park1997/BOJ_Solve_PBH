@@ -14,6 +14,12 @@ print(l)
 print(h_max,h_min)
 result = []
 for height in range(h_min,h_max+1):
-    
+    time = 0
+    for i in range(N):
+        for j in range(M):
+            if graph[i][j] < height:
+                time += (graph[i][j] - height) * 2
+            elif graph[i][j] > height:
+                
 
 
