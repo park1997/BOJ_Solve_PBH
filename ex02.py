@@ -41,7 +41,6 @@ order = []
 for _ in range(student_num):
     sex, switch_num = map(int,sys.stdin.readline().split())
     switching(sex,switch_num)
-    # print(switch)
 
 cnt = 0
 for i in range(len(switch)):
