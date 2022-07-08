@@ -1,11 +1,157 @@
 import sys
-N = int(sys.stdin.readline())
-length = int(sys.stdin.readline())
-string = sys.stdin.readline().strip()
+from collections import deque
 
-target = "I" + "OI" * N
-cnt = 0
-for s in range(0,len(string)-len(target) + 1 ,1):
-    if target == string[s:s+len(target)]:
-        cnt += 1
-print(cnt)
+def fishMove(graph):
+    global dx, dy, fish_smell, sx, sy
+    new_graph = [[deque() for i in range(4)] for _ in range(4)]
+
+    # 물고기 이동
+    for i in range(4):
+        for j in range(4):
+            if len(graph[i][j]) != 0:
+                while graph[i][j]:
+                    direc = graph[i][j].popleft()
+                    first_direc = direc
+                    d_cnt = 0
+                    nx , ny = None, None
+                    while True:
+                        d_cnt += 1
+                        nx = i + dx[direc]
+                        ny = j + dy[direc]
+                        if nx>=0 and ny>=0 and nx<4 and ny<4 and [nx,ny] != [sx, sy] and [nx,ny] not in fish_smell:
+                            new_graph[nx][ny].append(direc)
+                            break
+                        if d_cnt == 8:
+                            new_graph[i][j].append(first_direc)
+                            break
+                        direc = (direc - 1) % 8
+    return new_graph
+
+def sharkMove(sx,sy,graph):
+    shark_eat = []
+    for d1 in range(4):
+        for d2 in range(4):
+            for d3 in range(4):
+                fm = []
+                eat_cnt = 0
+                eat_list = []
+                nx, ny = sx, sy
+                nx += sdx[d1]
+                ny += sdy[d1]
+                if nx<0 or ny<0 or nx>=4 or ny>=4:
+                    eat_cnt = 0
+                    continue
+                if [nx,ny] not in eat_list and len(graph[nx][ny]) != 0:
+                    eat_cnt += len(graph[nx][ny])
+                    if [nx,ny] not in fm:
+                        fm.append([nx,ny])
+                eat_list.append([nx,ny])
+
+
+                nx += sdx[d2]
+                ny += sdy[d2]
+                if nx<0 or ny<0 or nx>=4 or ny>=4:
+                    eat_cnt = 0
+                    continue
+                if [nx,ny] not in eat_list and len(graph[nx][ny]) != 0:
+                    eat_cnt += len(graph[nx][ny])
+                    if [nx,ny] not in fm:
+                        fm.append([nx,ny])
+                eat_list.append([nx,ny])
+
+                nx += sdx[d3]
+                ny += sdy[d3]
+                if nx<0 or ny<0 or nx>=4 or ny>=4:
+                    eat_cnt = 0
+                    continue
+                if [nx,ny] not in eat_list and len(graph[nx][ny]) != 0:
+                    eat_cnt += len(graph[nx][ny])
+                    if [nx,ny] not in fm:
+                        fm.append([nx,ny])
+                eat_list.append([nx,ny])
+
+                shark_eat.append([eat_cnt,d1,d2,d3,nx,ny,fm])
+
+                eat_cnt = 0
+    shark_eat = list(sorted(shark_eat, key = lambda x : (-x[0],x[1],x[2],x[3])))
+    print(shark_eat[0])
+
+    fish_cnt, direc1, direc2, direc3, next_sx, next_sy, fm = shark_eat[0]
+    nsx, nsy = sx, sy
+    nsx += sdx[direc1]
+    nsy += sdy[direc1]
+    graph[nsx][nsy] = deque()
+    nsx += sdx[direc2]
+    nsy += sdy[direc2]
+    graph[nsx][nsy] = deque()
+    nsx += sdx[direc3]
+    nsy += sdy[direc3]
+    graph[nsx][nsy] = deque()
+
+    return fm, next_sx, next_sy
+
+def fishDuplicate(first_state):
+    global graph
+    for x, y, direction in first_state:
+        graph[x][y].append(direction)
+    
+
+
+dx = [0,-1,-1,-1,0,1,1,1]
+dy = [-1,-1,0,1,1,1,0,-1]
+
+sdx = [-1,0,1,0]
+sdy = [0,-1,0,1]
+
+M, S = map(int,sys.stdin.readline().split())
+graph = [[deque() for i in range(4)] for _ in range(4)]
+first_state = []
+
+for _ in range(M):
+    fx, fy, d = map(int,sys.stdin.readline().split())
+    graph[fx-1][fy-1].append(d-1)
+    first_state.append([fx-1, fy-1, d-1])
+
+sx, sy = map(int,sys.stdin.readline().split())
+sx -= 1
+sy -= 1
+
+
+
+for g in graph:
+    print(g)
+print()
+fish_smell = []
+
+for c in range(S):
+    print("11111")
+    for g in graph:
+        print(g)
+    print()
+
+    print("fish smell",fish_smell)
+    
+    graph = fishMove(graph)
+    print("222222")
+    for g in graph:
+        print(g)
+    print()
+
+    fish_smell, sx, sy = sharkMove(sx,sy,graph)
+    print("fish smell",fish_smell)
+
+    
+    print("sx sy",sx,sy)
+
+    for x, y, direction in first_state:
+        graph[x][y].append(direction)
+print(33333)
+for g in graph:
+    print(g)
+print()
+
+result = 0
+for gra in graph:
+    for g in gra:
+        result += len(g)
+print(result)
