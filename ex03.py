@@ -1,40 +1,118 @@
 import sys
-import heapq
-def Djikstra(start):
-    global m, n, r
-    distance = [int(1e9)] * (n+1)
-    distance[start] = 0
-    q = []
-    heapq.heappush(q,[0,start])
-    while q:
-        dis, now_node = heapq.heappop(q)
-        if dis > m:
-            continue
-        if distance[now_node] < dis:
-            continue
-        for next_node, d in graph[now_node]:
-            new_dis = dis + d
-            if new_dis <= m and new_dis < distance[next_node]:
-                distance[next_node] = new_dis
-                heapq.heappush(q,[new_dis,next_node])
-    return distance
+paper = [0]
+for _ in range(6):
+    paper.append(int(sys.stdin.readline()))
 
-n,m,r = map(int,sys.stdin.readline().split())
-items = list(map(int,sys.stdin.readline().split()))
-graph = [[] for _ in range(n+1)]
-for _ in range(r):
-    a,b,l = map(int,sys.stdin.readline().split())
-    graph[a].append([b,l])
-    graph[b].append([a,l])
-result = -1
-for node in range(1,n+1):
-    d = Djikstra(node)
-    temp_result = 0
-    for idx, i in enumerate(d):
-        if idx == 0:
-            continue
-        if i <= m:
-            temp_result += items[idx-1]
-    if temp_result > result:
-        result = temp_result
+# 6
+result = paper[6]
+# paper[6] = 0
+
+# 5
+for i in range(paper[5]):
+    result += 1
+    paper[5] -= 1
+    for j in range(11):
+        if paper[1] > 0:
+            paper[1] -= 1
+
+# 4
+for i in range(paper[4]):
+    cnt4 = 0
+    result += 1
+    paper[4] -= 1
+    for j in range(5):
+        if paper[2] > 0:
+            paper[2] -= 1
+            cnt4 += 1
+    if cnt4 == 5:
+        continue
+    for k in range(20 - cnt4 * 4):
+        if paper[1] > 0:
+            paper[1] -= 1
+    
+
+
+# 3
+if paper[3] >= 4:
+    result += paper[3] // 4
+    paper[3] = paper[3] % 4
+    # while True:
+    #     paper[3] -= 4
+    #     result += 1
+    #     if paper[3] < 4:
+    #         break
+cnt3 = 0
+if paper[3] == 3:
+    result += 1
+    # paper[3] -= 3
+    if paper[2] > 0:
+        paper[2] -= 1
+        if paper[1] > 0:
+            for i in range(5):
+                if paper[1] > 0:
+                    paper[1] -= 1
+    elif paper[2] == 0:
+        for j in range(9):
+            if paper[1] > 0:
+                paper[1] -= 1
+elif paper[3] == 2:
+    result += 1
+    # paper[3] -= 2
+    for i in range(3):
+        if paper[2] > 0:
+            paper[2] -= 1
+            cnt3 += 1
+    for j in range(18 - cnt3 * 4):
+        if paper[1] > 0:
+            paper[1] -= 1
+elif paper[3] == 1:
+    result += 1
+    # paper[3] -= 1
+    for i in range(5):
+        if paper[2] > 0:
+            paper[2] -= 1
+            cnt3 += 1
+    for j in range(27 - cnt3 * 4):
+        if paper[1] > 0:
+            paper[1] -= 1
+
+# 2
+if paper[2] >= 9:
+    result += paper[2] // 9
+    paper[2] = paper[2] % 9
+    
+    # while True:
+    #     paper[2] -= 9
+    #     result += 1
+    #     if paper[2] < 9:
+    #         break
+
+if paper[2] > 0:
+    result += 1
+    for i in range(36 - paper[2]* 4):
+        if paper[1] > 0:
+            paper[1] -= 1
+    # paper[2] = 0
+
+
+# 1
+if paper[1] >= 36:
+    result += paper[1] // 36
+    paper[1] = paper[1] % 36
+
+    # while True:
+    #     paper[1] -= 36
+    #     result += 1
+    #     if paper[1] < 36:
+    #         break
+
+if paper[1] > 0:
+    result += 1
+
 print(result)
+
+
+
+
+
+
