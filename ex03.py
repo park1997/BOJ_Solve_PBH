@@ -1,12 +1,28 @@
-import sys
-R, C, K = map(int,sys.stdin.readline().split())
-graph = []
-for _ in range(R):
-    gra = list(map(int,sys.stdin.readline().split()))
+def dfs(start,sum,visited):
+    visited[start]= True 
+    for i in range(N) :
+        new_vis = deepcopy(visited)
+        new_vis = [v[:] for v in visited]
+
+        if not new_vis[i]:
+            sum2 = sum+ abs(nums[start]-nums[i])
+            dfs(i,sum2,new_vis)
+    
+    sums.append(sum)
+
+from copy import deepcopy   
+
+N = int(input())
+
+nums = list(map(int,input().split()))
+
+sums = []
 
 
-W = int(sys.stdin.readline())
-for _ in range(W):
-    x, y, t = map(int,sys.stdin.readline().split())
+for i in range(N):
+    sum = 0 
+    visited = [False for i in range(N)] 
+    dfs(i,sum,visited)
 
+print(max(sums))
 
