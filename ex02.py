@@ -22,5 +22,6 @@ shark_direc = {}
 
 for i in range(1, M + 1, 1):
     d = list(map(int,sys.stdin.readline().split()))
-    for j, ele in enumerate(d:)
+    for j, ele in enumerate(d):
+        
 
