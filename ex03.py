@@ -1,4 +1,5 @@
 import sys
+from turtle import back
 
 from ex01 import sharkMove
 
@@ -45,14 +46,24 @@ def fishMove():
             print(gra)
         print()
 
+    return graph
 
-def moveShark():
-    global graph
+def backTracking(x,y):
+    
+    dx = [-1,-1,0,1,1,1,0,-1]
+    dy = [0,-1,-1,-1,0,1,1,1]
+
+    g = fishMove()
+    nx, ny = shark_x, shark_y
+    shark_direc = graph[shark_x][shark_y]
+    while 1:
+        nx += dx[shark_direc]
+        ny += dy[shark_direc]
+        if nx >= 0 and ny >= 0 and nx < 4 and ny < 4:
+            backTracking(nx,ny)
 
 
-
-
-    return 
+    return
 
 
 graph = []
@@ -63,6 +74,7 @@ for i in range(4):
 
 pass_fish = graph[0][0][0]
 graph[0][0] = [0, graph[0][0][1]]
+shark_x, shark_y = 0, 0
 
 
 
@@ -70,6 +82,4 @@ graph[0][0] = [0, graph[0][0][1]]
 for gra in graph:
     print(gra)
 
-while 1:
-    fishMove()
-    sharkMove()
+backTracking()
