@@ -25,12 +25,6 @@ def bfs(s):
                         graph[nx][ny] = 0
                         temp_c.append([nx,ny])
 
-    # for i in range(N):
-    #     for j in range(M):
-    #         if graph[i][j]==1:
-    #             visited[i][j]=0
-    #         elif graph[i][j]==0:
-    #             visited[i][j]=1
     c = temp_c
     result.append(len(c))
 
