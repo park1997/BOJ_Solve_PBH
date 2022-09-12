@@ -19,7 +19,6 @@ def simulation(ac, ng):
             flag = False
             while q:
                 a, b, dis = q.popleft()
-                # print("Aa",a,b,dis)
                 for i in range(3):
                     nx = a + dx[i]
                     ny = b + dy[i]
@@ -27,11 +26,9 @@ def simulation(ac, ng):
                         if ng[nx][ny] == 0 and dis < D:
                             q.append([nx, ny, dis + 1])
                         elif ng[nx][ny] == 1 and dis <= D:
-                            # ng[nx][ny] = 0
                             if [nx,ny] not in target:
                                 target.append([nx, ny])
                             flag = True
-                            # print(nx,ny,"catch")
                             break
                 if flag:
                     break
@@ -40,9 +37,6 @@ def simulation(ac, ng):
             x, y = t
             ng[x][y] = 0
             cnt += 1
-
-        # for g in ng:
-        #     print(g)
 
         if floor == 0:
             break
@@ -58,19 +52,7 @@ archer_case = list(combinations(archer, 3))
 
 final_result = 0
 for ac in archer_case:
-    # print("ac",ac)
     new_graph = [g[:] for g in graph]
     result = simulation(ac, new_graph)
     final_result = max(result, final_result)
-    # print(final_result)
-    # break
-    # print("*"*10)
 print(final_result)
-
-
-"""
-2 4 2
-1 1 1 1
-0 1 1 0
-"""
-
