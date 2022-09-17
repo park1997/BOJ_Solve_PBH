@@ -1,5 +1,4 @@
 import sys
-from turtle import back
 
 from ex01 import sharkMove
 

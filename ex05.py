@@ -58,7 +58,6 @@ def newGame2():
                             temp_num, temp_direction = position[x][y].popleft()
                             temp_queue.append([temp_num, temp_direction])
                             mal[temp_num] = [nx, ny, temp_direction]
-                            # print("hi",direction,[nx,ny],num)
                             if temp_num == num:
                                 temp_queue[-1][1] = direction
                                 mal[num] = [nx, ny, direction]
@@ -94,7 +93,6 @@ def newGame2():
                         if position[x][y][j][0] == num:
                             position[x][y][j][1] = direction
                             break
-                
         # 체스판을 벗어나는 경우 => 파란색 => 방향 전환
         else:
             nx = x - dx[direction]
@@ -143,19 +141,6 @@ def newGame2():
                     if position[x][y][j][0] == num:
                         position[x][y][j][1] = direction
                         break
-                
-
-        # print(num)
-        # print(mal)
-        # for p in position:
-        #     # print(p)
-        #     for t in p:
-        #         print(len(t), end = " ")
-        #     print()
-        # for p in position:
-        #     print(p)
-        # print()
-
     return False
 
 
@@ -169,29 +154,13 @@ for num in range(1, K + 1, 1):
     x, y, direc = map(int,input().split())
     mal[num] = [x - 1, y - 1, direc - 1]
     position[x-1][y-1].append([num, direc-1])
-# for p in position:
-#     print(p)
-# print()
 count = 0
 while 1:
     count += 1
     result_flag = newGame2()
     if result_flag:
-        # for p in position:
-        #     # print(p)
-        #     for t in p:
-        #         print(len(t), end = " ")
-        #     print()
         print(count)
         break
     if count == 1000:
-        # for p in position:
-        #     print(p)
         print(-1)
         break
-    # break
-    # for p in position:
-    #     print(p)
-    # print("*"*10)
-    # print(mal)
-
