@@ -19,9 +19,9 @@ for test_case in range(1, T + 1):
 
         index1 = string.index("1")
         if string[index1 - 3 : index1 + 4] in dic and f1:
-            print("asd",string[index1 - 3 : index1 + 4])
+            
             real = string[index1 - 3 : index1 + 53]
-            print("ddddd",real)
+            
             for i in range(0, 56, 7):
                 try:
                     result.append(dic[real[i : i + 7]])
@@ -29,9 +29,9 @@ for test_case in range(1, T + 1):
                     f1 = False
                     flag = False
                     result = []
-                    continue
+                    break
         elif string[index1 - 2 : index1 + 5] in dic and f2:
-            print("asd",string[index1 - 2 : index1 + 5])
+            
             real = string[index1 - 2 : index1 + 54]
             for i in range(0, 56, 7):
                 try:
@@ -40,7 +40,7 @@ for test_case in range(1, T + 1):
                     f2 = False
                     flag = False
                     result = []
-                    continue
+                    break
         elif string[index1 - 1 : index1 + 6] in dic and f3:
             real = string[index1 - 1 : index1 + 55]
             for i in range(0, 56, 7):
@@ -50,18 +50,18 @@ for test_case in range(1, T + 1):
                     f3 = False
                     flag = False
                     result = []
-                    continue
+                    break
         
         
-        for idx, j in enumerate(result):
-            if idx % 2 == 0:
-                even += j
-            else:
-                odd += j
-        
-        if (even * 3 + odd) % 10 == 0:
-            print("#{} {}".format(test_case,even + odd))
+    for idx, j in enumerate(result):
+        if idx % 2 == 0:
+            even += j
         else:
-            print("#{} 0".format(test_case))
-            
+            odd += j
+    
+    if (even * 3 + odd) % 10 == 0:
+        print("#{} {}".format(test_case,even + odd))
+    else:
+        print("#{} 0".format(test_case))
+        
         
