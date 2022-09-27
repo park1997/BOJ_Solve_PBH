@@ -10,6 +10,8 @@ def findCluster():
                 result += 1
                 flag = False
     return result
+
+
 T = 10
 for test_case in range(1, T + 1):
     f = False
