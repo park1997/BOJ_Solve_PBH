@@ -21,7 +21,6 @@ T = int(input())
 for test_case in range(1, T + 1):
     N, M = map(int, input().split())
     visited = [[-1] * M for _ in range(N)]
-    graph = []
     q = deque()
     for i in range(N):
         g = input()
@@ -29,7 +28,5 @@ for test_case in range(1, T + 1):
             if g[j] == "W":
                 q.append([i,j])
                 visited[i][j] = 0
-        graph.append(g)
-
     result = findLand()
     print("#{} {}".format(test_case, result))
