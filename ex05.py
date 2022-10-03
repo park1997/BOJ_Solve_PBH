@@ -5,6 +5,7 @@ def djikstra(start):
     heapq.heappush(q, [0, start])
     while q:
         dis, node = heapq.heappop(q)
+        if distance[node] < dis:
             continue
         for now_dis, now_node in graph[node]:
             new_dis = now_dis + dis
