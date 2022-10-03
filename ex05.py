@@ -1,166 +1,48 @@
+import heapq
 import sys
-from collections import deque
-
-
-def newGame2():
-    global position, mal, N, M
-    dx = [0, 0, -1, 1]
-    dy = [1, -1, 0, 0]
-    for num in range(1, K+1, 1):
-        x, y, direction = mal[num]
-        nx = x + dx[direction]
-        ny = y + dy[direction]
-        # 체스판을 벗어나지 않는 경우
-        if nx >= 0 and ny >= 0 and nx < N and ny< N:
-            # 흰색인 경우
-            if color_graph[nx][ny] == 0:
-                temp_queue = deque()
-                for i in range(len(position[x][y])):
-                    temp_num, temp_direction = position[x][y].popleft()
-                    temp_queue.append([temp_num, temp_direction])
-                    mal[temp_num] = [nx, ny, temp_direction]
-                    if temp_num == num:
-                        break
-                for elem_num, elem_direc in position[nx][ny]:
-                    temp_queue.append([elem_num, elem_direc])
-                position[nx][ny] = temp_queue
-                if len(position[nx][ny]) >= 4:
-                    return True
-                
-            # 빨간색인 경우
-            elif color_graph[nx][ny] == 1:
-                for i in range(len(position[x][y])):
-                    temp_num, temp_direction = position[x][y].popleft()
-                    position[nx][ny].appendleft([temp_num, temp_direction])
-                    mal[temp_num] = [nx, ny, temp_direction]
-                    if len(position[nx][ny]) >= 4:
-                        return True
-                    if temp_num == num:
-                        break
-            # 파란색인 경우
-            elif color_graph[nx][ny] == 2:
-                nx = x - dx[direction]
-                ny = y - dy[direction]
-                # 방향 반대로 바꾸기
-                if direction == 0:
-                    direction = 1
-                elif direction == 1:
-                    direction = 0
-                elif direction == 2:
-                    direction = 3
-                elif direction == 3:
-                    direction = 2
-                if nx >= 0 and ny >= 0 and nx < N and ny < N:
-                    # 방향 바꿨는데 흰색인 경우
-                    if color_graph[nx][ny] == 0:
-                        temp_queue = deque()
-                        for i in range(len(position[x][y])):
-                            temp_num, temp_direction = position[x][y].popleft()
-                            temp_queue.append([temp_num, temp_direction])
-                            mal[temp_num] = [nx, ny, temp_direction]
-                            if temp_num == num:
-                                temp_queue[-1][1] = direction
-                                mal[num] = [nx, ny, direction]
-                                break
-                        for elem_num, elem_direc in position[nx][ny]:
-                            temp_queue.append([elem_num, elem_direc])
-                        position[nx][ny] = temp_queue
-                        if len(position[nx][ny]) >= 4:
-                            return True
-                    # 방향 바꿨는데 빨간색인 경우
-                    elif color_graph[nx][ny] == 1:
-                        for i in range(len(position[x][y])):
-                            temp_num, temp_direction = position[x][y].popleft()
-                            position[nx][ny].appendleft([temp_num, temp_direction])
-                            mal[temp_num] = [nx, ny, temp_direction]
-                            if len(position[nx][ny]) >= 4:
-                                return True
-                            if temp_num == num:
-                                position[nx][ny][0][1] = direction
-                                mal[num] = [nx, ny, direction]
-                                break
-                    # 방향 바꿨는데 파란색인 경우 => 이동 X
-                    elif color_graph[nx][ny] == 2:
-                        mal[num][2] = direction
-                        for j in range(len(position[x][y])):
-                            if position[x][y][j][0] == num:
-                                position[x][y][j][1] = direction
-                                break
-                # 방향 바꿨는데 외부로 벗어나는 경우 => 이동 X
-                else:
-                    mal[num][2] = direction
-                    for j in range(len(position[x][y])):
-                        if position[x][y][j][0] == num:
-                            position[x][y][j][1] = direction
-                            break
-        # 체스판을 벗어나는 경우 => 파란색 => 방향 전환
+def djikstra(start):
+    q = []
+    heapq.heappush(q, [0, start])
+    while q:
+        dis, node = heapq.heappop(q)
+            continue
+        for now_dis, now_node in graph[node]:
+            new_dis = now_dis + dis
+            if distance[now_node] > new_dis:
+                distance[now_node] = new_dis
+                heapq.heappush(q, [new_dis, now_node])
+T = int(input())
+for _ in range(T):
+    n, m, t = map(int, sys.stdin.readline().split())
+    s, g, h = map(int, sys.stdin.readline().split())
+    graph = {}
+    for __ in range(m):
+        a, b, d = map(int, sys.stdin.readline().split())
+        if [a, b] == [g, h] or [a, b] == [h, g]:
+            if a not in graph:
+                graph[a] = [[d - 0.1 , b]]
+            else:
+                graph[a].append([d - 0.1, b])
+            if b not in graph:
+                graph[b] = [[d - 0.1, a]]
+            else:
+                graph[b].append([d - 0.1, a])
+            continue
+        if a not in graph:
+            graph[a] = [[d, b]]
         else:
-            nx = x - dx[direction]
-            ny = y - dy[direction]
-            # 방향 반대로 바꾸기
-            if direction == 0:
-                direction = 1
-            elif direction == 1:
-                direction = 0
-            elif direction == 2:
-                direction = 3
-            elif direction == 3:
-                direction = 2
-            # 벽만나서 방향 바꿨는데 흰색인 경우
-            if color_graph[nx][ny] == 0:
-                temp_queue = deque()
-                for i in range(len(position[x][y])):
-                    temp_num, temp_direction = position[x][y].popleft()
-                    temp_queue.append([temp_num, temp_direction])
-                    mal[temp_num] = [nx, ny, temp_direction]
-                    if temp_num == num:
-                        temp_queue[-1][1] = direction
-                        mal[num] = [nx, ny, direction]
-                        break
-                for elem_num, elem_direc in position[nx][ny]:
-                    temp_queue.append([elem_num, elem_direc])
-                position[nx][ny] = temp_queue
-                if len(position[nx][ny]) >= 4:
-                    return True
-            # 벽만나서 방향 바꿨는데 빨간색인 경우
-            elif color_graph[nx][ny] == 1:
-                for i in range(len(position[x][y])):
-                    temp_num, temp_direction = position[x][y].popleft()
-                    position[nx][ny].appendleft([temp_num, temp_direction])
-                    mal[temp_num] = [nx, ny, temp_direction]
-                    if len(position[nx][ny]) >= 4:
-                        return True
-                    if temp_num == num:
-                        position[nx][ny][0][1] = direction
-                        mal[num] = [nx, ny, direction]
-                        break
-            # 벽만나서 방향 바꿨는데 파란색인 경우
-            elif color_graph[nx][ny] == 2:
-                mal[num][2] = direction
-                for j in range(len(position[x][y])):
-                    if position[x][y][j][0] == num:
-                        position[x][y][j][1] = direction
-                        break
-    return False
-
-
-
-N, K = map(int,input().split())
-
-color_graph = [list(map(int,input().split())) for _ in range(N)]
-position = [[deque() for _ in range(N)] for _ in range(N)]
-mal = {}
-for num in range(1, K + 1, 1):
-    x, y, direc = map(int,input().split())
-    mal[num] = [x - 1, y - 1, direc - 1]
-    position[x-1][y-1].append([num, direc-1])
-count = 0
-while 1:
-    count += 1
-    result_flag = newGame2()
-    if result_flag:
-        print(count)
-        break
-    if count == 1000:
-        print(-1)
-        break
+            graph[a].append([d, b])
+        if b not in graph:
+            graph[b] = [[d, a]]
+        else:
+            graph[b].append([d, a])
+    distance = [int(1e9)] * (n + 1)
+    distance[s] = 0
+    djikstra(s)
+    result = []
+    for __ in range(t):
+        x  = int(sys.stdin.readline().strip())
+        if type(distance[x]) is float:
+            result.append(x)
+    result.sort()
+    print(*result)
