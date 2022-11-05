@@ -52,7 +52,7 @@ if __name__ == '__main__':
 	TC = int(inputarray[0])
 	MARK = int(inputarray[1])
 
-	for testcase in range(1, 2):
+	for testcase in range(1, TC + 1):
 		score = MARK if run() else 0
 		print("#%d %d" % (testcase, score), flush = True)
         
