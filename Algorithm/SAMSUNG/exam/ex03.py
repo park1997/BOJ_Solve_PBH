@@ -65,3 +65,12 @@ columns = 3
 swipes =[[1,1,2,4,3],[3,2,1,2,3],[4,1,1,4,3],[2,2,1,3,3]]
 r = solution(rows, columns, swipes)
 print(r)
+
+
+
+
+
+6 시그마 
+과제 정의 단계 
+-> voc -> ccr -> CTQ 도출 과정이 가지는 의미 의미
+CTQ 가 무었인지 확실히 알기 
