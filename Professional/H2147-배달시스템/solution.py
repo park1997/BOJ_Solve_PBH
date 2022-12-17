@@ -13,11 +13,11 @@ def init(N:int, px:List[int], py:List[int]) -> None:
     pq = defaultdict(list) # pq[uID] = (hash(cnt,dist,pID)),,,,, 우선순위 탐색
 
     for i in range(N):
-        rUser[i] = (px[i], py[i])
+        rUser[i] = [px[i], py[i]]
 
 
 def addRestaurant(pID:int, x:int, y:int) -> None:
-    
+    rRest[pID].append([x, y])
 
     return
 
