@@ -26,3 +26,16 @@ distance = [int(1e9)] * (N + 1)
 start, end = map(int, sys.stdin.readline().split())
 djikstra(start)
 print(distance[end])
+
+
+
+
+
+
+
+
+
+
+
+
+
