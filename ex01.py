@@ -1,22 +1,41 @@
+import sys
 from collections import deque
-start, end = map(int, input().split())
-def bfs(s):
+import copy
+
+input = sys.stdin.readline
+H, W = map(int, input().split())
+graph = [ input().rstrip() for _ in range(H)]
+
+dx = [1, -1, 0, 0]
+dy = [0, 0, 1, -1]
+
+
+
+def bfs(xi, xj):
     queue = deque()
-    queue.append(s)
-    visited[s] = 1
+    visited = [[-1 for _ in range(W)] for _ in range(H)]
+    queue.append([xi, xj])
+    visited[xi][xj] = 0
+    temp = -1
+    
     while queue:
-        u = queue.popleft()
-        if u == end:
-            return visited[u]
-        for new_u in [u * 2, u - 1, u + 1]:
-            if 0 <= new_u <= 100000: 
-                if visited[new_u] == 0:
-                    if new_u == (u * 2):
-                        queue.append(new_u)
-                        visited[new_u] = visited[u]
-                    else:
-                        queue.append(new_u)
-                        visited[new_u] = visited[u] + 1
-visited = [0] * (100001)
-result = bfs(start)
-print(result - 1)
+        size = len(queue)
+        for _ in range(size):
+            u, v = queue.popleft()
+            for i in range(4):
+                new_u, new_v = u + dx[i], v + dy[i]
+                if 0 <= new_u < H and 0 <= new_v < W:
+                    if graph[new_u][new_v] == 'L':
+                        if visited[new_u][new_v] == -1:
+                            queue.append([new_u, new_v])
+                            visited[new_u][new_v] = 0
+        temp += 1
+
+    return temp
+
+MAX_D = 0
+for i in range(H):
+    for j in range(W):
+        if graph[i][j] == 'L':    
+            MAX_D = max(MAX_D, bfs(i, j))
+print(MAX_D)
