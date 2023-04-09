@@ -1,41 +1,42 @@
 import sys
-from collections import deque
-import copy
 
-input = sys.stdin.readline
-H, W = map(int, input().split())
-graph = [ input().rstrip() for _ in range(H)]
+def init(node, start, end):
+    if start == end:
+        tree[node] = nums[start]
+    else:
+        init(node * 2, start, (start + end) // 2)
+        init(node * 2 + 1, (start + end) // 2 + 1, end)
+        tree[node] = min(tree[node * 2], tree[node * 2 + 1])
 
-dx = [1, -1, 0, 0]
-dy = [0, 0, 1, -1]
-
-
-
-def bfs(xi, xj):
-    queue = deque()
-    visited = [[-1 for _ in range(W)] for _ in range(H)]
-    queue.append([xi, xj])
-    visited[xi][xj] = 0
-    temp = -1
+def segment_compare(node, start, end, left, right):
+    if left > end or right < start:
+        return 2e9
     
-    while queue:
-        size = len(queue)
-        for _ in range(size):
-            u, v = queue.popleft()
-            for i in range(4):
-                new_u, new_v = u + dx[i], v + dy[i]
-                if 0 <= new_u < H and 0 <= new_v < W:
-                    if graph[new_u][new_v] == 'L':
-                        if visited[new_u][new_v] == -1:
-                            queue.append([new_u, new_v])
-                            visited[new_u][new_v] = 0
-        temp += 1
+    if start >= left and right >= end:
+        return tree[node]
+    
+    return min(segment_compare(node * 2 , start, (start + end) // 2, left, right), segment_compare(node * 2 + 1 , (start + end) // 2 + 1, end, left, right))
 
-    return temp
+def update(node, start, end, index, value):
+    if start > index or end < index:
+        return
 
-MAX_D = 0
-for i in range(H):
-    for j in range(W):
-        if graph[i][j] == 'L':    
-            MAX_D = max(MAX_D, bfs(i, j))
-print(MAX_D)
+    if start == end:
+        tree[node], nums[start] = value, value
+    elif start != end:
+        update(node * 2, start, (start + end) // 2, index, value)
+        update(node * 2 + 1, (start + end) // 2 + 1, end, index, value)
+        tree[node] = min(tree[node * 2], tree[node * 2 + 1])
+
+N = int(sys.stdin.readline())
+nums = list(map(int, sys.stdin.readline().split()))
+tree = [0] * (N * 4)
+init(1, 0, N - 1)
+for _ in range(int(sys.stdin.readline())):
+    a, b, c = map(int, sys.stdin.readline().split())
+    if a == 1:
+        nums[b - 1] = c
+        update(1, 0, N - 1, b - 1, c)
+    elif a == 2:
+        result = segment_compare(1, 0, N - 1, b - 1, c - 1)
+        print(result)
